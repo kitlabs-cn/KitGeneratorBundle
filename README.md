@@ -1,0 +1,2 @@
+# KitGeneratorBundle
+extend SensioGeneratorBundle
