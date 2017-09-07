@@ -1,0 +1,31 @@
+{
+	"name": "kitlabs/kit-generator-bundle",
+	"type": "symfony-bundle",
+	"description": "extend SensioGeneratorBundle",
+	"keywords": ["generator bundle","generate crud", "generate form",],
+	"homepage": "https://github.com/kitlabs-cn/KitGeneratorBundle",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "lcp0578",
+			"email": "lcp0578@gmail.com",
+			"homepage": "https://github.com/lcp0578"
+		},
+		{
+			"name": "The contributors",
+			"homepage": "https://github.com/kitlabs-cn/KitGeneratorBundle/contributors"
+		}
+	],
+	"support": {
+		"email": "lcp0578@gmail.com"
+	},
+	"require": {
+		"php": ">=5.5.9",
+		"sensio/generator-bundle": ">=v3.0"
+	},
+	"autoload": {
+		 "psr-4": {
+            "Kit\\KitGeneratorBundle\\": ""
+        }
+	}
+}

@@ -1,0 +1,4 @@
+services:
+#    kit_generator.example:
+#        class: Kit\GeneratorBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]

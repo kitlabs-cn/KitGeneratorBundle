@@ -1,0 +1,3 @@
+kit_generator_homepage:
+    path:     /
+    defaults: { _controller: KitGeneratorBundle:Default:index }
