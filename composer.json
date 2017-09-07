@@ -2,7 +2,7 @@
 	"name": "kitlabs/kit-generator-bundle",
 	"type": "symfony-bundle",
 	"description": "extend SensioGeneratorBundle",
-	"keywords": ["generator bundle","generate crud", "generate form",],
+	"keywords": ["generator bundle","generate crud", "generate form"],
 	"homepage": "https://github.com/kitlabs-cn/KitGeneratorBundle",
 	"license": "MIT",
 	"authors": [
