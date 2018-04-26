@@ -1,7 +1,7 @@
 <?php
 
 
-namespace BaseBundle\Generator;
+namespace Kit\GeneratorBundle\Generator;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;

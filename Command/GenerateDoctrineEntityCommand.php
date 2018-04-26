@@ -1,7 +1,7 @@
 <?php
 
 
-namespace BaseBundle\Command;
+namespace Kit\GeneratorBundle\Command;
 
 use Sensio\Bundle\GeneratorBundle\Generator\DoctrineEntityGenerator;
 use Sensio\Bundle\GeneratorBundle\Command\Helper\QuestionHelper;

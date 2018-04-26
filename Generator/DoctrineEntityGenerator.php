@@ -1,6 +1,6 @@
 <?php
 
-namespace BaseBundle\Generator;
+namespace Kit\GeneratorBundle\Generator;
 
 use Sensio\Bundle\GeneratorBundle\Model\EntityGeneratorResult;
 use Symfony\Component\Filesystem\Filesystem;

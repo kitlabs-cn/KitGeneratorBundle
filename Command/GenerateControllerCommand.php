@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace BaseBundle\Command;
+namespace Kit\GeneratorBundle\Command;
 
 use Sensio\Bundle\GeneratorBundle\Manipulator\RoutingManipulator;
 use Symfony\Component\Console\Input\InputOption;

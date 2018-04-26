@@ -1,6 +1,6 @@
 <?php
 
-namespace BaseBundle\Command;
+namespace Kit\GeneratorBundle\Command;
 
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
@@ -12,10 +12,10 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Sensio\Bundle\GeneratorBundle\Command\AutoComplete\EntitiesAutoCompleter;
 use Sensio\Bundle\GeneratorBundle\Command\Helper\QuestionHelper;
-use BaseBundle\Generator\DoctrineCrudGenerator;
-use BaseBundle\Generator\DoctrineFormGenerator;
+use Kit\GeneratorBundle\Generator\DoctrineCrudGenerator;
+use Kit\GeneratorBundle\Generator\DoctrineFormGenerator;
 use Sensio\Bundle\GeneratorBundle\Manipulator\RoutingManipulator;
-use BaseBundle\Command\GenerateDoctrineCommand;
+use Kit\GeneratorBundle\Command\GenerateDoctrineCommand;
 use Sensio\Bundle\GeneratorBundle\Command\Validators;
 
 /**

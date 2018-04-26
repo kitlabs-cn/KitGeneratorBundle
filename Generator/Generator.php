@@ -1,6 +1,6 @@
 <?php
 
-namespace BaseBundle\Generator;
+namespace Kit\GeneratorBundle\Generator;
 
 use Symfony\Component\Console\Output\ConsoleOutput;
 

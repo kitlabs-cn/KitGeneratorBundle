@@ -1,6 +1,6 @@
 <?php
 
-namespace BaseBundle\Command;
+namespace Kit\GeneratorBundle\Command;
 
 use Sensio\Bundle\GeneratorBundle\Manipulator\ConfigurationManipulator;
 use Sensio\Bundle\GeneratorBundle\Model\Bundle;

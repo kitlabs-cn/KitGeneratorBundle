@@ -1,6 +1,6 @@
 <?php
 
-namespace BaseBundle\Command;
+namespace Kit\GeneratorBundle\Command;
 
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
