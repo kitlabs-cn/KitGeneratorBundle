@@ -46,5 +46,5 @@ in the `app/AppKernel.php` file of your project:
 
 ## Usage
 
-	kit:generate:crud
-	kit:generate:form
+	kit:doctrine:generate:crud
+	kit:doctrine:generate:form
