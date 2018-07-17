@@ -23,7 +23,8 @@
 	},
 	"require" : {
 		"php" : ">=5.5.9",
-		"sensio/generator-bundle" : ">=v3.0"
+		"sensio/generator-bundle" : ">=v3.0",
+		"knplabs/knp-paginator-bundle" : "^2.8"
 	},
 	"autoload" : {
 		"psr-4" : {
