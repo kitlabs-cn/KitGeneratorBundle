@@ -1,5 +1,5 @@
 {
-	"name" : "kitlabs/generator-bundle",
+	"name" : "kitlabs/kit-generator-bundle",
 	"type" : "symfony-bundle",
 	"description" : "extend SensioGeneratorBundle",
 	"keywords" : [
