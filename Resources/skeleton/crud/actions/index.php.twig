@@ -22,7 +22,7 @@
         $repo = $this->getDoctrine()->getRepository('{{ bundle }}:{{ entity }}');
         $pagesize = 15;
         $paginator = $this->get('knp_paginator');
-        $pagination = $paginator->paginate($repo->getQuery(), $request->query->getInt('page', 1), $pagesize);
+        $pagination = $paginator->paginate($repo->getPageQuery(), $request->query->getInt('page', 1), $pagesize);
 {% endblock method_body %}
 
 {% block method_return %}
