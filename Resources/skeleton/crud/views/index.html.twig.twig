@@ -20,13 +20,13 @@
             {{ '{% for item in pagination %}' }}
     			<tr id="item_{{ '{{ item.id }}' }}">
     				
-    				<td>{%- for field, metadata in fields %}
-    					{% if metadata.type in ['datetime'] %}
+    				{% for field, metadata in fields %}
+    					<td>{%- if metadata.type in ['datetime'] %}
     						{{ '{{ item.' ~ field ~ '|date(\'Y-m-d H:i:s\') }}' }}
     					{% else %}
     					{{ '{{ item.' ~ field ~ ' }}' }}
-    					{% endif %}
-    				{%- endfor %}</td>
+    					{%- endif %}</td>
+    				{% endfor %}
     				<td>
     					<a class="button border-yellow button-little" href="{{ '{{ path(\'' ~ route_name_prefix ~'_edit\', { \'id\': item.id }) }}' }}">编辑</a>
     				    <a class="button border-green button-little" href="{{ '{{ path(\'' ~ route_name_prefix ~'_show\', { \'id\': item.id }) }}' }}">查看</a>
