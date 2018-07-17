@@ -11,18 +11,23 @@
 {% endblock phpdoc_method_annotations %}
      */
 {% block method_definition %}
-    public function indexAction()
+    public function indexAction(Request $request)
 {% endblock method_definition %}
     {
 {% block method_body %}
-        $em = $this->getDoctrine()->getManager();
-
-        ${{ entity_pluralized }} = $em->getRepository('{{ bundle }}:{{ entity }}')->findAll();
+		/**
+         *
+         * @var \{{ bundle }}\Repository\{{ entity }}Repository $repo
+         */
+        $repo = $this->getDoctrine()->getRepository('{{ bundle }}:{{ entity }}');
+        $pagesize = 15;
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate($repo->getQuery(), $request->query->getInt('page', 1), $pagesize);
 {% endblock method_body %}
 
 {% block method_return %}
         return $this->render('@{{ bundle|slice(0, -6) }}/{{ entity|replace({'\\': '/'}) }}/index.html.twig', array(
-            '{{ entity_pluralized }}' => ${{ entity_pluralized }},
+            'pagination' => $pagination
         ));
 {% endblock method_return %}
     }

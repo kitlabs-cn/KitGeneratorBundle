@@ -4,86 +4,54 @@
 
 {% block body %}
 {{ "{% block body %}" }}
-    <h1>{{ entity_pluralized|capitalize }} list</h1>
-
-    <table>
-        <thead>
-            <tr>
-            {%- for field, metadata in fields %}
-
-                <th>{{ field|capitalize }}</th>
-
-            {%- endfor %}
-
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {{ '{% for ' ~ entity_singularized ~ ' in ' ~ entity_pluralized ~ ' %}' }}
-            <tr>
-
-        {%- for field, metadata in fields %}
-            {%- if loop.first and ('show' in actions) %}
-
-                <td><a href="{{ "{{ path('" ~ route_name_prefix ~ "_show', { '"~ identifier ~"': " ~ entity_singularized ~ "."~ identifier ~" }) }}" }}">{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' }}' }}</a></td>
-
-            {%- elseif metadata.type in ['datetime'] %}
-
-                <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d H:i:s\') }}{% endif %}' }}</td>
-            
-            {%- elseif metadata.type in ['date'] %}
-
-                <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d\') }}{% endif %}' }}</td>
-          
-            {%- elseif metadata.type in ['time'] %}
-
-                <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'H:i:s\') }}{% endif %}' }}</td>
-
-            {%- elseif metadata.type in ['array'] %}
-
-                <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|join(\', \') }}{% endif %}' }}</td>
-
-            {%- elseif metadata.type in ['boolean'] %}
-
-                <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}Yes{% else %}No{% endif %}' }}</td>
-
-            {%- else %}
-
-                <td>{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' }}' }}</td>
-
-            {%- endif %}
-
-            {%- if loop.last %}
-
-                <td>
-                    <ul>
-
-                    {%- for action in record_actions %}
-
-                        <li>
-                            <a href="{{ "{{ path('" ~ route_name_prefix ~ "_" ~ action ~ "', { '"~ identifier ~"': " ~ entity_singularized ~ "."~ identifier ~" }) }}" }}">{{ action }}</a>
-                        </li>
-
+    	<div class="panel admin-panel">
+    		<div class="panel-head">
+    			<strong>{{ entity_pluralized|capitalize }}列表</strong>&nbsp;&nbsp;&nbsp;
+    			<a class="button bg-blue" href="{{ '{{ path(\'' ~ route_name_prefix ~'_new\') }}' }}">新增</a>
+    		</div>
+        {{'{% if pagination is defined and pagination is not empty %}' }}
+    		<table class="table table-hover">
+    			<tr>
+    				{%- for field, metadata in fields %}
+					<th>{{ field|capitalize }}</th>
                     {%- endfor %}
-
-                    </ul>
-                </td>
-
-            {%- endif %}
-        {%- endfor %}
-
-            </tr>
-        {{ '{% endfor %}' }}
-        </tbody>
-    </table>
-
-    {% if 'new' in actions -%}
-    <ul>
-        <li>
-            <a href="{{ "{{ path('" ~ route_name_prefix ~ "_new') }}" }}">Create a new {{ entity_singularized }}</a>
-        </li>
-    </ul>
-    {%- endif %}
-
+    				<th width="200">操作</th>
+    			</tr>
+            {{ '{% for item in pagination %}' }}
+    			<tr id="item_{{ '{{ item.id }}' }}">
+    				
+    				<td>{%- for field, metadata in fields %}
+    					{% if metadata.type in ['datetime'] %}
+    						{{ '{{ item.' ~ field ~ '|date(\'Y-m-d H:i:s\') }}' }}
+    					{% else %}
+    					{{ '{{ item.' ~ field ~ ' }}' }}
+    					{% endif %}
+    				{%- endfor %}</td>
+    				<td>
+    					<a class="button border-yellow button-little" href="{{ '{{ path(\'' ~ route_name_prefix ~'_edit\', { \'id\': item.id }) }}' }}">编辑</a>
+    				    <a class="button border-green button-little" href="{{ '{{ path(\'' ~ route_name_prefix ~'_show\', { \'id\': item.id }) }}' }}">查看</a>
+    				    <a class="button border-red button-little" href="#" onclick="{
+    					if(confirm('确认删除?')){return delItem({{ '{{ item.id }}' }});}returnfalse;}">删除</a>
+    				    </td>
+    			</tr>
+    			{{ '{% endfor %}' }}
+    		</table>
+    			{{ '{{ knp_pagination_render(pagination,\'pagination_pintuer.html.twig\') }}' }}
+    	    {{ '{% endif %}' }}
+    	</div>
 {{ "{% endblock %}" }}
+{{ '{% block js %}' }}
+<script>
+   function delItem(id){
+	   $.post("{{ '{{ path(\'' ~ route_name_prefix ~ '_delete\') }}' }}", { id: id },
+			   function(data){
+			     if(data.status == 1){
+				     $('#item_'+id).hide();
+				     	layer.msg(data.msg);
+				     }else{
+				    	 layer.msg(data.msg);}
+			   }, "json");
+	}
+</script>
+{{ '{% endblock %}' }}
 {% endblock body %}

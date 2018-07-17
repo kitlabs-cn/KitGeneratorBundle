@@ -12,22 +12,31 @@
 {% endblock phpdoc_method_annotations %}
      */
 {% block method_definition %}
-    public function deleteAction(Request $request, {{ entity_class }} ${{ entity_singularized }})
+    public function deleteAction(Request $request)
 {% endblock method_definition %}
     {
 {% block method_body %}
-        $form = $this->createDeleteForm(${{ entity_singularized }});
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove(${{ entity_singularized }});
+        $id = $request->request->get('id');
+        $item = $this->getDoctrine()
+            ->getRepository('{{ bundle }}:{{ entity }}')
+            ->find($id);
+        if (! $item) {
+            return new JsonResponse([
+                'status' => 0,
+                'msg' => '记录不存在'
+            ]);
+        } else {
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->remove($item);
             $em->flush();
+            return new JsonResponse([
+                'status' => 1,
+                'msg' => '删除成功'
+            ]);
         }
 {% endblock method_body %}
 
 {% block method_return %}
-        return $this->redirectToRoute('{{ route_name_prefix }}_index');
 {% endblock method_return %}
     }
 

@@ -16,7 +16,8 @@
 {% endblock method_definition %}
     {
 {% block method_body %}
-        ${{ entity_singularized }} = new {{ entity_singularized|capitalize }}();
+		$errors = [];
+        ${{ entity_singularized }} = new {{ entity }}();
         {% if use_form_type_instance -%}
             $form = $this->createForm(new {{ entity_singularized|capitalize }}Type(), ${{ entity_singularized }});
         {% else -%}
@@ -24,17 +25,15 @@
         {% endif -%}
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist(${{ entity_singularized }});
-            $em->flush();
-
-            {% if 'show' in actions -%}
-                return $this->redirectToRoute('{{ route_name_prefix }}_show', array('{{ identifier }}' => ${{ entity_singularized }}->get{{ identifier|capitalize }}()));
-            {%- else -%}
-                return $this->redirectToRoute('{{ route_name_prefix }}_index'));
-            {%- endif %}
-
+        if ($form->isSubmitted()) {
+        	if($form->isValid()){
+        		$em = $this->getDoctrine()->getManager();
+                $em->persist(${{ entity_singularized }});
+                $em->flush();
+        	   	return $this->msgResponse(0, '提示', '新增成功','{{ route_name_prefix }}_index');
+            }else{
+                $errors = $this->serializeFormErrors($form);
+            }
         }
 {% endblock method_body %}
 
@@ -42,6 +41,7 @@
         return $this->render('@{{ bundle|slice(0, -6) }}/{{ entity|replace({'\\': '/'}) }}/new.html.twig', array(
             '{{ entity_singularized }}' => ${{ entity_singularized }},
             'form' => $form->createView(),
+            'errors' => $errors
         ));
 {% endblock method_return %}
     }

@@ -6,6 +6,7 @@ namespace {{ namespace }}\Form{{ entity_namespace ? '\\' ~ entity_namespace : ''
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 {% endblock use_statements %}
 
 {% block class_definition %}
@@ -21,10 +22,11 @@ class {{ form_class }} extends AbstractType
     {
         $builder
             {%- for field in fields -%}
-
                 ->add('{{ field }}')
-
-            {%- endfor %};
+            {%- endfor %}
+            ->add('submit', SubmitType::class, [
+                'label' => '提交'
+            ]);
     }
     {%- endif -%}
 

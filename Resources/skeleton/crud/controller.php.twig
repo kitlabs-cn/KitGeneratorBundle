@@ -7,13 +7,14 @@ use {{ namespace }}\Entity\{{ entity }};
 {% if ('new' in actions or 'edit' in actions) and use_form_type_instance %}
 use {{ namespace }}\Form\{{ entity }}Type;
 {% endif %}
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use BaseBundle\Controller\BaseController;
 {% if 'annotation' == format -%}
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 {%- endif %}
 {% if 'new' in actions or 'edit' in actions or 'delete' in actions %}
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 {%- endif %}
 
 {% endblock use_statements %}
@@ -30,7 +31,7 @@ use Symfony\Component\HttpFoundation\Request;
 {% endblock phpdoc_class_annotations %}
  */
 {% block class_definition %}
-class {{ entity_class }}Controller extends Controller
+class {{ entity_class }}Controller extends BaseController
 {% endblock class_definition %}
 {
 {% block class_body %}

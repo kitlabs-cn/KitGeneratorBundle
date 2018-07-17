@@ -3,15 +3,20 @@
 {% endblock extends %}
 
 {% block body %}
+{{ "{% block css %}" }}
+{{ "{% endblock %}" }}
 {{ "{% block body %}" }}
-    <h1>{{ entity_singularized|capitalize }} creation</h1>
-
-    {{ '{{ form_start(form) }}' }}
-        {{ '{{ form_widget(form) }}' }}
-        <input type="submit" value="Create" />
-    {{ '{{ form_end(form) }}' }}
-
-{% set hide_edit, hide_delete = true, true %}
-{{ include('crud/views/others/record_actions.html.twig.twig') -}}
+	<div class="line">
+        <div class="x8">
+        {{ '{% for error in errors %}' }}
+        <div class="alert alert-yellow">
+            <span class="close rotate-hover"></span><strong>提示：</strong>{{ '{{ error }}' }}
+        </div>
+        {{ '{% endfor %}' }}
+            {{  "{{ form(form, {'attr': {'novalidate': 'novalidate', 'class': 'form-x', 'id': 'form'}}) }}" }}
+        </div>
+    </div>
+{{ "{% endblock %}" }}
+{{ "{% block js %}" }}
 {{ "{% endblock %}" }}
 {% endblock body %}

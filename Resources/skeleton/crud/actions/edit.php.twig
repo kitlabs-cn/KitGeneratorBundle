@@ -12,30 +12,41 @@
 {% endblock phpdoc_method_annotations %}
      */
 {% block method_definition %}
-    public function editAction(Request $request, {{ entity_class }} ${{ entity_singularized }})
+    public function editAction(Request $request)
 {% endblock method_definition %}
     {
 {% block method_body %}
-        $deleteForm = $this->createDeleteForm(${{ entity_singularized }});
+		$errors = [];
+		/**
+         *
+         * @var \{{ bundle }}\Entity\{{ entity }} ${{ entity_singularized }}
+         */
+        ${{ entity_singularized }} = $this->getDoctrine()->getRepository('{{ bundle }}:{{ entity }}')->find($id);
+        if(empty(${{ entity_singularized }})){
+        		return $this->msgResponse(1, '警告', '改记录不存在或已被删除','{{ route_name_prefix }}_index');
+        }
         {% if use_form_type_instance -%}
-            $editForm = $this->createForm(new {{ entity_singularized|capitalize }}Type(), ${{ entity_singularized }});
+            $form = $this->createForm(new {{ entity_singularized|capitalize }}Type(), ${{ entity_singularized }});
         {% else -%}
-            $editForm = $this->createForm('{{ namespace }}\Form\{{ entity }}Type', ${{ entity_singularized }});
+            $form = $this->createForm('{{ namespace }}\Form\{{ entity }}Type', ${{ entity_singularized }});
         {% endif -%}
-        $editForm->handleRequest($request);
+        $form->handleRequest($request);
 
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('{{ route_name_prefix }}_edit', array('{{ identifier }}' => ${{ entity_singularized }}->get{{ identifier|capitalize }}()));
+        if ($form->isSubmitted()){
+        	if($form->isValid()) {
+            	$this->getDoctrine()->getManager()->flush();
+           		return $this->msgResponse(0, '提示', '修改成功','{{ route_name_prefix }}_index');
+            }else{
+                $errors = $this->serializeFormErrors($form);
+            }
         }
 {% endblock method_body %}
 
 {% block method_return %}
         return $this->render('@{{ bundle|slice(0, -6) }}/{{ entity|replace({'\\': '/'}) }}/edit.html.twig', array(
             '{{ entity_singularized }}' => ${{ entity_singularized }},
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'form' => $form->createView(),
+            'errors' => $errors,
         ));
 {% endblock method_return %}
     }

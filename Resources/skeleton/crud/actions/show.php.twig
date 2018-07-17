@@ -12,21 +12,24 @@
 {% endblock phpdoc_method_annotations %}
      */
 {% block method_definition %}
-    public function showAction({{ entity_class }} ${{ entity_singularized }})
+    public function showAction(Request $request)
 {% endblock method_definition %}
     {
 {% block method_body %}
-{% if 'delete' in actions %}
-        $deleteForm = $this->createDeleteForm(${{ entity_singularized }});
-{% endif %}
+		$id = $request->query->getInt('id');
+        /**
+         *
+         * @var \{{ bundle }}\Entity\{{ entity }} ${{ entity_singularized }}
+         */
+        ${{ entity_singularized }} = $this->getDoctrine()->getRepository('{{ bundle }}:{{ entity }}')->find($id);
+        if(empty(${{ entity_singularized }})){
+        		return $this->msgResponse(1, '警告', '改记录不存在或已被删除','{{ route_name_prefix }}_index');
+        }
 {% endblock method_body %}
 
 {% block method_return %}
         return $this->render('@{{ bundle|slice(0, -6) }}/{{ entity|replace({'\\': '/'}) }}/show.html.twig', array(
             '{{ entity_singularized }}' => ${{ entity_singularized }},
-{% if 'delete' in actions %}
-            'delete_form' => $deleteForm->createView(),
-{% endif %}
         ));
 {% endblock method_return %}
     }
