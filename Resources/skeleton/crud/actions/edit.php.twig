@@ -17,7 +17,7 @@
     {
 {% block method_body %}
 		$errors = [];
-		$id = $request->request->get('id');
+		$id = $request->query->getInt('id');
 		/**
          *
          * @var \{{ bundle }}\Entity\{{ entity }} ${{ entity_singularized }}
