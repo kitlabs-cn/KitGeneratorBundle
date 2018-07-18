@@ -12,9 +12,9 @@
         {{'{% if pagination is defined and pagination is not empty %}' }}
     		<table class="table table-hover">
     			<tr>
-    				{%- for field, metadata in fields %}
+    				{% for field, metadata in fields %}
 					<th>{{ field|capitalize }}</th>
-                    {%- endfor %}
+                    {% endfor %}
     				<th width="200">操作</th>
     			</tr>
             {{ '{% for item in pagination %}' }}
