@@ -20,7 +20,7 @@
             {{ '{% for item in pagination %}' }}
     			<tr id="item_{{ '{{ item.id }}' }}">
     				{% for field, metadata in fields %}
-    					<td>{% if metadata.type in ['datetime'] %}
+    				<td>{% if metadata.type in ['datetime'] %}
     						{{ '{{ item.' ~ field ~ '|date(\'Y-m-d H:i:s\') }}' }}
     					{% else %}
     					{{ '{{ item.' ~ field ~ ' }}' }}
@@ -31,7 +31,7 @@
     				    <a class="button border-green button-little" href="{{ '{{ path(\'' ~ route_name_prefix ~'_show\', { \'id\': item.id }) }}' }}">查看</a>
     				    <a class="button border-red button-little" href="#" onclick="{
     					if(confirm('确认删除?')){return delItem({{ '{{ item.id }}' }});}returnfalse;}">删除</a>
-    				    </td>
+    				</td>
     			</tr>
     			{{ '{% endfor %}' }}
     		</table>
