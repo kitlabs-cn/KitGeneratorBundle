@@ -4,14 +4,13 @@
 
 {% block body %}
 {{ "{% block body %}" }}
-    <h1>{{ entity_singularized|capitalize }}</h1>
+    <h1>{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_singularized|capitalize }}{% endif %}</h1>
 
-    <table>
+    <table class="table">
         <tbody>
         {%- for field, metadata in fields %}
-
             <tr>
-                <th>{{ field|capitalize }}</th>
+                <td>{% if metadata.options.comment is defined %}{{ metadata.options.comment }}{% else %}{{ field|capitalize }}{% endif %}</td>
 
             {%- if metadata.type in ['datetime'] %}
 

@@ -21,10 +21,18 @@ class {{ form_class }} extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            {%- for field in fields -%}
-                ->add('{{ field }}')
+            {%- for field in fields %}
+            	{% if field.options.comment is defined %}
+->add('{{ field.fieldName }}', null, [
+                	'label' => {{ field.options.comment }}
+                ])
+                {% else %}
+->add('{{ field.fieldName }}', null, [
+                	'label' => {{ field.fieldName }}
+                ])
+                {% endif %}
             {%- endfor %}
-            ->add('submit', SubmitType::class, [
+->add('submit', SubmitType::class, [
                 'label' => '提交'
             ]);
     }
