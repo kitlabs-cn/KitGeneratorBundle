@@ -24,11 +24,11 @@ class {{ form_class }} extends AbstractType
             {%- for field in fields %}
             	{% if field.options.comment is defined %}
 ->add('{{ field.fieldName }}', null, [
-                	'label' => {{ field.options.comment }}
+                	'label' => '{{ field.options.comment }}'
                 ])
                 {% else %}
 ->add('{{ field.fieldName }}', null, [
-                	'label' => {{ field.fieldName }}
+                	'label' => '{{ field.fieldName }}'
                 ])
                 {% endif %}
             {%- endfor %}
