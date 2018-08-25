@@ -12,7 +12,7 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Sensio\Bundle\GeneratorBundle\Command\AutoComplete\EntitiesAutoCompleter;
 use Sensio\Bundle\GeneratorBundle\Command\Helper\QuestionHelper;
-use Kit\GeneratorBundle\Generator\DoctrineCrudGenerator;
+use Kit\GeneratorBundle\Generator\DoctrineCrudThemeGenerator;
 use Kit\GeneratorBundle\Generator\DoctrineFormGenerator;
 use Sensio\Bundle\GeneratorBundle\Manipulator\RoutingManipulator;
 use Kit\GeneratorBundle\Command\GenerateDoctrineCommand;
@@ -23,7 +23,7 @@ use Sensio\Bundle\GeneratorBundle\Command\Validators;
  *
  * @author lcp0578@gmail.com
  */
-class GenerateDoctrineCrudCommand extends GenerateDoctrineCommand
+class GenerateDoctrineCrudThemeCommand extends GenerateDoctrineCommand
 {
     private $formGenerator;
 
@@ -33,11 +33,12 @@ class GenerateDoctrineCrudCommand extends GenerateDoctrineCommand
     protected function configure()
     {
         $this
-            ->setName('kit:doctrine:generate:crud')
-            ->setAliases(array('kit:generate:doctrine:crud'))
+            ->setName('kit:doctrine:generate:crud:theme')
+            ->setAliases(array('kit:generate:doctrine:crud:theme'))
             ->setDescription('Generates a CRUD based on a Doctrine entity')
             ->addArgument('entity', InputArgument::OPTIONAL, 'The entity class name to initialize (shortcut notation)')
             ->addOption('entity', null, InputOption::VALUE_OPTIONAL, 'The entity class name to initialize (shortcut notation)')
+            ->addOption('theme', null, InputOption::VALUE_OPTIONAL, 'The views theme name')
             ->addOption('route-prefix', null, InputOption::VALUE_REQUIRED, 'The route prefix')
             ->addOption('with-write', null, InputOption::VALUE_NONE, 'Whether or not to generate create, new and delete actions')
             ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The format used for configuration files (php, xml, yml, or annotation)', 'annotation')
@@ -100,6 +101,12 @@ EOT
         $prefix = $this->getRoutePrefix($input, $entity);
         $withWrite = $input->getOption('with-write');
         $forceOverwrite = $input->getOption('overwrite');
+        $theme = $input->getOption('theme');
+        if(!in_array($theme, $this->getThemes())){
+            $output->writeln('<error>--theme option value error.Theme name list: [Default, Blove, Blue, Pintuer]</error>');
+            
+            return 1;
+        }
 
         $questionHelper->writeSection($output, 'CRUD generation');
 
@@ -113,26 +120,27 @@ EOT
         $bundle = $this->getContainer()->get('kernel')->getBundle($bundle);
 
         $generator = $this->getGenerator($bundle);
-        $generator->generate($bundle, $entity, $metadata[0], $format, $prefix, $withWrite, $forceOverwrite);
+        $generator->generate($bundle, $entity, $metadata[0], $format, $prefix, $withWrite, $forceOverwrite, $theme);
 
         $output->writeln('Generating the CRUD code: <info>OK</info>');
 
         $errors = array();
-        $runner = $questionHelper->getRunner($output, $errors);
+        $questionHelper->getRunner($output, $errors);
+        //$runner = $questionHelper->getRunner($output, $errors);
 
         // form
-        if ($withWrite) {
-            $this->generateForm($bundle, $entity, $metadata, $forceOverwrite);
-            $output->writeln('Generating the Form code: <info>OK</info>');
-        }
+//         if ($withWrite) {
+//             $this->generateForm($bundle, $entity, $metadata, $forceOverwrite);
+//             $output->writeln('Generating the Form code: <info>OK</info>');
+//         }
 
         // routing
-        $output->write('Updating the routing: ');
-        if ('annotation' != $format) {
-            $runner($this->updateRouting($questionHelper, $input, $output, $bundle, $format, $entity, $prefix));
-        } else {
-            $runner($this->updateAnnotationRouting($bundle, $entity, $prefix));
-        }
+//         $output->write('Updating the routing: ');
+//         if ('annotation' != $format) {
+//             $runner($this->updateRouting($questionHelper, $input, $output, $bundle, $format, $entity, $prefix));
+//         } else {
+//             $runner($this->updateAnnotationRouting($bundle, $entity, $prefix));
+//         }
 
         $questionHelper->writeGeneratorSummary($output, $errors);
     }
@@ -321,7 +329,7 @@ EOT
 
     protected function createGenerator($bundle = null)
     {
-        return new DoctrineCrudGenerator(
+        return new DoctrineCrudThemeGenerator(
             $this->getContainer()->get('filesystem'),
             $this->getContainer()->getParameter('kernel.root_dir')
         );
@@ -340,5 +348,15 @@ EOT
     public function setFormGenerator(DoctrineFormGenerator $formGenerator)
     {
         $this->formGenerator = $formGenerator;
+    }
+    
+    private function getThemes()
+    {
+        return [
+            'Default',
+            'Blove',
+            'Blue',
+            'Pintuer',
+        ];
     }
 }
