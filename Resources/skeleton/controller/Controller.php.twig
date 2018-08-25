@@ -3,14 +3,14 @@
 namespace {{ namespace }}\Controller;
 
 {% block use_statements %}
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use BaseBundle\Controller\BaseController;
 {% if 'annotation' == format.routing -%}
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 {% endif %}
 {% endblock use_statements %}
 
 {% block class_definition %}
-class {{ controller }}Controller extends Controller
+class {{ controller }}Controller extends BaseController
 {% endblock class_definition %}
 {
 {% block class_body %}

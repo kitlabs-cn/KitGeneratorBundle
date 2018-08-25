@@ -20,9 +20,9 @@
         $item = $this->getDoctrine()
             ->getRepository('{{ bundle }}:{{ entity }}')
             ->find($id);
-        if (! $item) {
+        if (empty($item)) {
             return new JsonResponse([
-                'status' => 0,
+                'code' => 0,
                 'msg' => '记录不存在'
             ]);
         } else {
@@ -30,7 +30,7 @@
             $em->remove($item);
             $em->flush();
             return new JsonResponse([
-                'status' => 1,
+                'code' => 1,
                 'msg' => '删除成功'
             ]);
         }

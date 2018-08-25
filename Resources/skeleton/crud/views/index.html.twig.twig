@@ -48,7 +48,7 @@
    function delItem(id){
 	   $.post("{{ '{{ path(\'' ~ route_name_prefix ~ '_delete\') }}' }}", { id: id },
 			   function(data){
-			     if(data.status == 1){
+			     if(data.code == 1){
 				     $('#item_'+id).hide();
 				     	layer.msg(data.msg);
 				     }else{
