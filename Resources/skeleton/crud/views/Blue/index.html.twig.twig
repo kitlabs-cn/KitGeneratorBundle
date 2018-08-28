@@ -4,13 +4,25 @@
 
 {% block body %}
 {{ "{% block body %}" }}
-    	<div class="panel admin-panel">
-    		<div class="panel-head">
-    			<strong>{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}列表</strong>&nbsp;&nbsp;&nbsp;
-    			<a class="button bg-blue" href="{{ '{{ path(\'' ~ route_name_prefix ~'_new\') }}' }}">新增</a>
-    		</div>
+	<div id="search_bar" class="mt10">
+		<div class="box">
+			<div class="box_border">
+					<div class="box_top">
+						<div class="box_top_l fl">
+							<b class="pl15">{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}列表</b>
+						</div>
+						<div class="box_top_r fr pr15">
+							<a href="{{ '{{ path(\'' ~ route_name_prefix ~'_new\') }}' }}" class="color307fb1 button bg-blue">新增</a>
+						</div>
+					</div>
+				</div>
+		</div>
+	</div>
+				
         {{'{% if pagination is defined and pagination is not empty %}' }}
-    		<table class="table table-hover">
+    <div id="table" class="mt10">
+		<div class="box span10 oh">
+			<table width="100%" border="0" cellpadding="0" cellspacing="0" class="list_table">
     			<tr>{%- for field, metadata in fields %}
     					{% if metadata.options.comment is defined %}
     						<th>{{ metadata.options.comment }}</th>
@@ -21,7 +33,7 @@
     				<th width="200">操作</th>
     			</tr>
             {{ '{% for item in pagination %}' }}
-    			<tr id="item_{{ '{{ item.id }}' }}">
+    			<tr id="item_{{ '{{ item.id }}' }}" class="tr">
     				
     				{% for field, metadata in fields %}
     					<td>{%- if metadata.type in ['datetime'] -%}
@@ -42,6 +54,7 @@
     			{{ '{{ knp_pagination_render(pagination,\'pagination.html.twig\') }}' }}
     	    {{ '{% endif %}' }}
     	</div>
+    </div>
 {{ "{% endblock %}" }}
 {{ '{% block js %}' }}
 <script>

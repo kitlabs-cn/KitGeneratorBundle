@@ -6,14 +6,19 @@
 {{ "{% block css %}" }}
 {{ "{% endblock %}" }}
 {{ "{% block body %}" }}
-	<div class="line">
-        <div class="x8">
-        {{ '{% for error in errors %}' }}
-        <div class="alert alert-yellow">
-            <span class="close rotate-hover"></span><strong>提示：</strong>{{ '{{ error }}' }}
-        </div>
-        {{ '{% endfor %}' }}
-            {{  "{{ form(form, {'attr': {'novalidate': 'novalidate', 'class': 'form-x', 'id': 'form'}}) }}" }}
+	<div id="forms" class="mt10">
+		<div class="box">
+			<div class="box_border">
+				<div class="box_top"><b class="pl15">{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}编辑</b></div>
+				<div class="box_center">
+                    {{ '{% for error in errors %}' }}
+                    <div class="alert alert-yellow">
+                        <span class="close rotate-hover"></span><strong>提示：</strong>{{ '{{ error }}' }}
+                    </div>
+                    {{ '{% endfor %}' }}
+                    {{  "{{ form(form, {'attr': {'novalidate': 'novalidate', 'class': 'form-x', 'id': 'form'}}) }}" }}
+        		</div>
+        	</div>
         </div>
     </div>
 {{ "{% endblock %}" }}

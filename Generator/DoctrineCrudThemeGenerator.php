@@ -264,6 +264,7 @@ class DoctrineCrudThemeGenerator extends Generator
             'route_prefix' => $this->routePrefix,
             'route_name_prefix' => $this->routeNamePrefix,
             'actions' => $this->actions,
+            'table' => $this->metadata->table,
             'fields' => $this->metadata->fieldMappings,
         ));
     }
@@ -283,6 +284,7 @@ class DoctrineCrudThemeGenerator extends Generator
             'entity_singularized' => $this->entitySingularized,
             'fields' => $this->metadata->fieldMappings,
             'bundle' => $this->bundle->getName(),
+            'table' => $this->metadata->table,
             'actions' => $this->actions,
         ));
     }
