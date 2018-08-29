@@ -6,16 +6,14 @@
 {{ "{% block css %}" }}
 {{ "{% endblock %}" }}
 {{ "{% block body %}" }}
-	<div class="line">
-        <div class="x8">
-        {{ '{% for error in errors %}' }}
-        <div class="alert alert-yellow">
-            <span class="close rotate-hover"></span><strong>提示：</strong>{{ '{{ error }}' }}
-        </div>
-        {{ '{% endfor %}' }}
+        <div class="infolist">
+            {{ '{% for error in errors %}' }}
+            <div class="alert alert-yellow">
+                <span class="close rotate-hover"></span><strong>提示：</strong>{{ '{{ error }}' }}
+            </div>
+            {{ '{% endfor %}' }}
             {{  "{{ form(form, {'attr': {'novalidate': 'novalidate', 'class': 'form-x', 'id': 'form'}}) }}" }}
         </div>
-    </div>
 {{ "{% endblock %}" }}
 {{ "{% block js %}" }}
 {{ "{% endblock %}" }}

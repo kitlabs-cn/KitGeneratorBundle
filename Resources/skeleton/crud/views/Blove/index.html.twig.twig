@@ -4,38 +4,48 @@
 
 {% block body %}
 {{ "{% block body %}" }}
-    	<div class="panel admin-panel">
+    	<div class="infolist">
     		<div class="panel-head">
-    			<strong>{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}列表</strong>&nbsp;&nbsp;&nbsp;
-    			<a class="button bg-blue" href="{{ '{{ path(\'' ~ route_name_prefix ~'_new\') }}' }}">新增</a>
+    			<ul class="zsgc fleft">
+                  <li><a href="{{ '{{ path(\'' ~ route_name_prefix ~'_new\') }}' }}">新增</a></li>
+                </ul>
+    			<h3>{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}列表</h3>
     		</div>
         {{'{% if pagination is defined and pagination is not empty %}' }}
-    		<table class="table table-hover">
-    			<tr>{%- for field, metadata in fields %}
+    		<table width="100%" border="0" cellpadding="0" cellspacing="0">
+    			<tr class="title">{%- for field, metadata in fields %}
     					{% if metadata.options.comment is defined %}
-    						<th>{{ metadata.options.comment }}</th>
+    						<td>{{ metadata.options.comment }}</td>
     					{% else %}
-    						<th>{{ field|capitalize }}</th>
+    						<td>{{ field|capitalize }}</td>
     					{% endif %}
                     {%- endfor %}
-    				<th width="200">操作</th>
+    				<td width="200">操作</td>
     			</tr>
             {{ '{% for item in pagination %}' }}
-    			<tr id="item_{{ '{{ item.id }}' }}">
+    			<tr id="item_{{ '{{ item.id }}' }}"  class="line_g hover_bg">
     				
     				{% for field, metadata in fields %}
-    					<td>{%- if metadata.type in ['datetime'] -%}
+    					<td align="center">{%- if metadata.type in ['datetime'] -%}
     						{{ '{{ item.' ~ field ~ '|date(\'Y-m-d H:i:s\') }}' }}
     					{%- else -%}
     					{{ '{{ item.' ~ field ~ ' }}' }}
     					{%- endif %}</td>
     				{% endfor -%}
     				<td>
-    					<a class="button border-yellow button-little" href="{{ '{{ path(\'' ~ route_name_prefix ~'_edit\', { \'id\': item.id }) }}' }}">编辑</a>
-    				    <a class="button border-green button-little" href="{{ '{{ path(\'' ~ route_name_prefix ~'_show\', { \'id\': item.id }) }}' }}">查看</a>
-    				    <a class="button border-red button-little" href="#" onclick="{
-    					if(confirm('确认删除?')){return delItem({{ '{{ item.id }}' }});}returnfalse;}">删除</a>
-    				    </td>
+    					<ul class="zsgc fleft">
+    						<li>
+    							<a class="button border-yellow button-little" href="{{ '{{ path(\'' ~ route_name_prefix ~'_edit\', { \'id\': item.id }) }}' }}">编辑</a>
+    						</li>
+    						<li>
+        				    	<a class="button border-green button-little" href="{{ '{{ path(\'' ~ route_name_prefix ~'_show\', { \'id\': item.id }) }}' }}">查看</a>
+        				    </li>
+        				   <li>
+        				    <a class="button border-red button-little" href="#" onclick="{
+        					if(confirm('确认删除?')){return delItem({{ '{{ item.id }}' }});}returnfalse;}">删除</a>
+        					</li>
+    					</ul>
+    				</td>
     			</tr>
     			{{ '{% endfor %}' }}
     		</table>
