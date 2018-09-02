@@ -32,16 +32,14 @@ in the `app/AppKernel.php` file of your project:
 	{
 	    public function registerBundles()
 	    {
-	    	  // ...
-	    	  if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
-	    	  		 // ...
-			        if ('dev' === $this->getEnvironment()) {
-			            // ...
-			 
-			            new Kit\GeneratorBundle\KitGeneratorBundle(),
-			        }
-	 			}
-	       
+	        // ...
+	        if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
+	    	    // ...
+	            if ('dev' === $this->getEnvironment()) {
+			        // ...
+		            $bundles[] = new Kit\GeneratorBundle\KitGeneratorBundle(),
+			    }
+	 	    }
 	    }
 	 
 	    // ...
