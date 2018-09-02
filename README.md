@@ -32,13 +32,16 @@ in the `app/AppKernel.php` file of your project:
 	{
 	    public function registerBundles()
 	    {
-	        $bundles = array(
-	            // ...
-	 
-	            new Kit\GeneratorBundle\KitGeneratorBundle(),
-	        );
-	 
-	        // ...
+	    	  // ...
+	    	  if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
+	    	  		 // ...
+			        if ('dev' === $this->getEnvironment()) {
+			            // ...
+			 
+			            new Kit\GeneratorBundle\KitGeneratorBundle(),
+			        }
+	 			}
+	       
 	    }
 	 
 	    // ...
@@ -48,3 +51,5 @@ in the `app/AppKernel.php` file of your project:
 
 	kit:doctrine:generate:crud
 	kit:doctrine:generate:form
+	//theme
+	kit:doctrine:generate:crud:theme --theme=Pintuer
