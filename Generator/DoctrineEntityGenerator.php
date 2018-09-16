@@ -7,8 +7,8 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
-use Doctrine\ORM\Tools\EntityGenerator;
-use Doctrine\ORM\Tools\EntityRepositoryGenerator;
+use Kit\GeneratorBundle\Tools\EntityGenerator;
+use Kit\GeneratorBundle\Tools\EntityRepositoryGenerator;
 use Doctrine\ORM\Tools\Export\ClassMetadataExporter;
 use Doctrine\Common\Util\Inflector;
 
@@ -17,6 +17,7 @@ use Doctrine\Common\Util\Inflector;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Jonathan H. Wage <jonwage@gmail.com>
+ * @author lcpeng <lcp0578@gmail.com>
  */
 class DoctrineEntityGenerator extends Generator
 {
@@ -39,7 +40,7 @@ class DoctrineEntityGenerator extends Generator
      *
      * @throws \Doctrine\ORM\Tools\Export\ExportException
      */
-    public function generate(BundleInterface $bundle, $entity, $format, array $fields)
+    public function generate(BundleInterface $bundle, $entity, $format, array $fields, array $tableOptions = [])
     {
         // configure the bundle (needed if the bundle does not contain any Entities yet)
         $config = $this->registry->getManager(null)->getConfiguration();
@@ -56,7 +57,7 @@ class DoctrineEntityGenerator extends Generator
 
         $class = new ClassMetadataInfo($entityClass, $config->getNamingStrategy());
         $class->customRepositoryClassName = str_replace('\\Entity\\', '\\Repository\\', $entityClass).'Repository';
-        $class->mapField(array('fieldName' => 'id', 'type' => 'integer', 'id' => true));
+        $class->mapField(array('fieldName' => 'id', 'type' => 'integer', 'id' => true, 'options' =>['comment' => '编号']));
         $class->setIdGeneratorType(ClassMetadataInfo::GENERATOR_TYPE_AUTO);
         foreach ($fields as $field) {
             $class->mapField($field);
@@ -65,7 +66,7 @@ class DoctrineEntityGenerator extends Generator
         $entityGenerator = $this->getEntityGenerator();
         if ('annotation' === $format) {
             $entityGenerator->setGenerateAnnotations(true);
-            $class->setPrimaryTable(array('name' => Inflector::tableize(str_replace('\\', '', $entity))));
+            $class->setPrimaryTable(array('name' => Inflector::tableize(str_replace('\\', '', $entity)), 'options' => $tableOptions));
             $entityCode = $entityGenerator->generateEntityClass($class);
             $mappingPath = $mappingCode = false;
         } else {

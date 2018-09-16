@@ -3,7 +3,7 @@
 
 namespace Kit\GeneratorBundle\Command;
 
-use Sensio\Bundle\GeneratorBundle\Generator\DoctrineEntityGenerator;
+use Kit\GeneratorBundle\Generator\DoctrineEntityGenerator;
 use Sensio\Bundle\GeneratorBundle\Command\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -29,6 +29,7 @@ class GenerateDoctrineEntityCommand extends GenerateDoctrineCommand
             ->setDescription('Generates a new Doctrine entity inside a bundle')
             ->addArgument('entity', InputArgument::OPTIONAL, 'The entity class name to initialize (shortcut notation)')
             ->addOption('entity', null, InputOption::VALUE_OPTIONAL, 'The entity class name to initialize (shortcut notation)')
+            ->addOption('table_comment', null, InputOption::VALUE_OPTIONAL, 'The entity class table comment')
             ->addOption('fields', null, InputOption::VALUE_REQUIRED, 'The fields to create with the new entity')
             ->addOption('format', null, InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or annotation)', 'annotation')
             ->setHelp(<<<EOT
@@ -78,6 +79,7 @@ EOT
 
         $entity = Validators::validateEntityName($input->getArgument('entity'));
         list($bundle, $entity) = $this->parseShortcutNotation($entity);
+        $tableComment = $input->getOption('table_comment');
         $format = Validators::validateFormat($input->getOption('format'));
         $fields = $this->parseFields($input->getOption('fields'));
 
@@ -87,7 +89,9 @@ EOT
 
         /** @var DoctrineEntityGenerator $generator */
         $generator = $this->getGenerator();
-        $generatorResult = $generator->generate($bundle, $entity, $format, array_values($fields));
+        $generatorResult = $generator->generate($bundle, $entity, $format, array_values($fields), [
+            'comment' => $tableComment
+        ]);
 
         $output->writeln(sprintf(
             '> Generating entity class <info>%s</info>: <comment>OK!</comment>',
@@ -110,7 +114,7 @@ EOT
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         $questionHelper = $this->getQuestionHelper();
-        $questionHelper->writeSection($output, 'Welcome to the Doctrine2 entity generator');
+        $questionHelper->writeSection($output, 'Welcome to the kitlabs Doctrine2 entity generator');
 
         // namespace
         $output->writeln(array(
@@ -158,6 +162,11 @@ EOT
         }
         $input->setArgument('entity', $bundle.':'.$entity);
 
+        // table comment
+        $question = new Question($questionHelper->getQuestion('Enter table comment:', ''), '');
+        $tableComment = $questionHelper->ask($input, $output, $question);
+        $input->setOption('table_comment', $tableComment);
+        
         // format
         $output->writeln(array(
             '',
@@ -216,6 +225,7 @@ EOT
                             $fieldAttributes[$boolAttribute] = filter_var($fieldAttributes[$boolAttribute], FILTER_VALIDATE_BOOLEAN);
                         }
                     }
+                    
                 }
 
                 $fields[$name] = $fieldAttributes;
@@ -393,7 +403,9 @@ EOT
             if ($unique = $questionHelper->ask($input, $output, $question)) {
                 $data['unique'] = $unique;
             }
-
+            $question = new Question($questionHelper->getQuestion('Options:comment', ''), '');
+            $data['options']['comment'] = $questionHelper->ask($input, $output, $question);
+            
             $fields[$columnName] = $data;
         }
 

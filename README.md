@@ -47,7 +47,45 @@ in the `app/AppKernel.php` file of your project:
 
 ## Usage
 
-	kit:doctrine:generate:crud
-	kit:doctrine:generate:form
+	 $ php7 bin/console kit:doctrine:generate:entity
+
+          Welcome to the kitlabs Doctrine2 entity generator
+
+        This command helps you generate Doctrine2 entities.
+
+        First, you need to give the entity name you want to generate.
+        You must use the shortcut notation like AcmeBlogBundle:Post.
+
+        The Entity shortcut name: MessageBundle:Test
+        Enter table comment:: this_is_table_comment #add table option comment 
+
+        Determine the format to use for the mapping information.
+
+        Configuration format (yml, xml, php, or annotation) [annotation]:
+
+        Instead of starting with a blank entity, you can add some fields now.
+        Note that the primary key will be added automatically (named id).
+
+        Available types: array, simple_array, json_array, object,
+        boolean, integer, smallint, bigint, string, text, datetime, datetimetz,
+        date, time, decimal, float, binary, blob, guid.
+
+        New field name (press <return> to stop adding fields): test_id
+        Field type [integer]:
+        Is nullable [false]:
+        Unique [false]:
+        Options:comment: this_is_field_comment # add table filed comment
+
+        New field name (press <return> to stop adding fields):
+
+          Entity generation
+
+          created ./src/MessageBundle/Entity/Test.php
+        > Generating entity class src/MessageBundle/Entity/Test.php: OK!
+        > Generating repository class src/MessageBundle/Repository/TestRepository.php: OK!
+
+          Everything is OK! Now get to work :).
+
+	kit:doctrine:generate:crud # generate controller, router and views
 	//theme
 	kit:doctrine:generate:crud:theme --theme=Pintuer
