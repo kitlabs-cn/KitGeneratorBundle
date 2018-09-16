@@ -163,7 +163,7 @@ EOT
         $input->setArgument('entity', $bundle.':'.$entity);
 
         // table comment
-        $question = new Question($questionHelper->getQuestion('Enter table comment:', ''), '');
+        $question = new Question($questionHelper->getQuestion('Enter table comment', ''), '');
         $tableComment = $questionHelper->ask($input, $output, $question);
         $input->setOption('table_comment', $tableComment);
         

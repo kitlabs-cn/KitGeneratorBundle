@@ -47,7 +47,8 @@ in the `app/AppKernel.php` file of your project:
 
 ## Usage
 
-	 $ php7 bin/console kit:doctrine:generate:entity
+	 //add table & field option comment 
+	 $ php7 bin/console kit:doctrine:generate:entity 
 
           Welcome to the kitlabs Doctrine2 entity generator
 
@@ -57,7 +58,7 @@ in the `app/AppKernel.php` file of your project:
         You must use the shortcut notation like AcmeBlogBundle:Post.
 
         The Entity shortcut name: MessageBundle:Test
-        Enter table comment:: this_is_table_comment #add table option comment 
+        Enter table comment: this_is_table_comment #add table option comment 
 
         Determine the format to use for the mapping information.
 
