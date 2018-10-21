@@ -9,10 +9,9 @@
     			<strong>{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}列表</strong>&nbsp;&nbsp;&nbsp;
     			<a class="button bg-blue" href="{{ '{{ path(\'' ~ route_name_prefix ~'_new\') }}' }}">新增</a>
     		</div>
-        {{'{% if pagination is defined and pagination is not empty %}' }}
     		<table class="table table-hover">
     			<tr>{%- for field, metadata in fields %}
-    					{% if metadata.options.comment is defined %}
+    				{% if metadata.options.comment is defined %}
     						<th>{{ metadata.options.comment }}</th>
     					{% else %}
     						<th>{{ field|capitalize }}</th>
@@ -20,27 +19,29 @@
                     {%- endfor %}
     				<th width="200">操作</th>
     			</tr>
-            {{ '{% for item in pagination %}' }}
-    			<tr id="item_{{ '{{ item.id }}' }}">
-    				
-    				{% for field, metadata in fields %}
-    					<td>{%- if metadata.type in ['datetime'] -%}
-    						{{ '{{ item.' ~ field ~ '|date(\'Y-m-d H:i:s\') }}' }}
-    					{%- else -%}
-    					{{ '{{ item.' ~ field ~ ' }}' }}
-    					{%- endif %}</td>
-    				{% endfor -%}
-    				<td>
-    					<a class="button border-yellow button-little" href="{{ '{{ path(\'' ~ route_name_prefix ~'_edit\', { \'id\': item.id }) }}' }}">编辑</a>
-    				    <a class="button border-green button-little" href="{{ '{{ path(\'' ~ route_name_prefix ~'_show\', { \'id\': item.id }) }}' }}">查看</a>
-    				    <a class="button border-red button-little" href="#" onclick="{
-    					if(confirm('确认删除?')){return delItem({{ '{{ item.id }}' }});}returnfalse;}">删除</a>
-    				    </td>
-    			</tr>
-    			{{ '{% endfor %}' }}
+    		{{'{% if pagination is defined and pagination is not empty %}' }}
+                {{ '{% for item in pagination %}' }}
+        			<tr id="item_{{ '{{ item.id }}' }}">
+        				{% for field, metadata in fields %}
+        					<td>{%- if metadata.type in ['datetime'] -%}
+        						{{ '{{ item.' ~ field ~ '|date(\'Y-m-d H:i:s\') }}' }}
+        					{%- else -%}
+        					{{ '{{ item.' ~ field ~ ' }}' }}
+        					{%- endif %}</td>
+        				{% endfor -%}
+        				<td>
+        					<a class="button border-yellow button-little" href="{{ '{{ path(\'' ~ route_name_prefix ~'_edit\', { \'id\': item.id }) }}' }}">编辑</a>
+        				    <a class="button border-green button-little" href="{{ '{{ path(\'' ~ route_name_prefix ~'_show\', { \'id\': item.id }) }}' }}">查看</a>
+        				    <a class="button border-red button-little" href="#" onclick="{
+        					if(confirm('确认删除?')){return delItem({{ '{{ item.id }}' }});}returnfalse;}">删除</a>
+        				    </td>
+        			</tr>
+        			{{ '{% endfor %}' }}
+        		{{ '{% else %}' }}
+        		{{ '{{ macro.no_content('~(fields|length) + 1 ~') }}' }}
+    			{{ '{% endif %}' }}
     		</table>
     			{{ '{{ knp_pagination_render(pagination,\'pagination.html.twig\') }}' }}
-    	    {{ '{% endif %}' }}
     	</div>
 {{ "{% endblock %}" }}
 {{ '{% block js %}' }}

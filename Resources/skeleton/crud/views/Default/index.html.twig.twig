@@ -9,7 +9,6 @@
     			<strong>{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}列表</strong>&nbsp;&nbsp;&nbsp;
     			<a class="button bg-blue" href="{{ '{{ path(\'' ~ route_name_prefix ~'_new\') }}' }}">新增</a>
     		</div>
-        {{'{% if pagination is defined and pagination is not empty %}' }}
     		<table class="table table-hover">
     			<tr>{%- for field, metadata in fields %}
     					{% if metadata.options.comment is defined %}
@@ -20,9 +19,9 @@
                     {%- endfor %}
     				<th width="200">操作</th>
     			</tr>
+    		{{'{% if pagination is defined and pagination is not empty %}' }}
             {{ '{% for item in pagination %}' }}
     			<tr id="item_{{ '{{ item.id }}' }}">
-    				
     				{% for field, metadata in fields %}
     					<td>{%- if metadata.type in ['datetime'] -%}
     						{{ '{{ item.' ~ field ~ '|date(\'Y-m-d H:i:s\') }}' }}
@@ -38,9 +37,11 @@
     				    </td>
     			</tr>
     			{{ '{% endfor %}' }}
+    			{{ '{% else %}' }}
+        		{{ '{{ macro.no_content('~(fields|length) + 1 ~') }}' }}
+    			{{ '{% endif %}' }}
     		</table>
     			{{ '{{ knp_pagination_render(pagination,\'pagination.html.twig\') }}' }}
-    	    {{ '{% endif %}' }}
     	</div>
 {{ "{% endblock %}" }}
 {{ '{% block js %}' }}
