@@ -39,7 +39,7 @@
     			{{ '{% endfor %}' }}
     			{{ '{% else %}' }}
                 {% set num = (fields|length) + 1 %}
-        		{{ '{{ macro.no_content('~ num ~') }}' }}
+        		{{ '{{ macro_no_content('~ num ~') }}' }}
     			{{ '{% endif %}' }}
     		</table>
     			{{ '{{ knp_pagination_render(pagination,\'pagination.html.twig\') }}' }}
