@@ -21,6 +21,7 @@ class <className> extends <repositoryName>
     public function getPageQuery()
     {
         return $this->createQueryBuilder(\'a\')
+        ->orderBy(\'a.id\', \'DESC\')
         ->getQuery();
     }
 }
