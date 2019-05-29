@@ -21,7 +21,7 @@ class DefaultController extends Controller
     {% endif -%}
     public function indexAction()
     {
-        return $this->render('{{ bundle }}:Default:index.html.twig');
+        return $this->render('@{{ bundle|slice(0,  -6) }}/Default/index.html.twig');
     }
 {% endblock class_body %}
 }
