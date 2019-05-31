@@ -165,6 +165,9 @@ EOT
         // table comment
         $question = new Question($questionHelper->getQuestion('Enter table comment', ''), '');
         $tableComment = $questionHelper->ask($input, $output, $question);
+        if(false === mb_detect_encoding($tableComment, 'UTF-8')){
+            $tableComment = iconv('GB2312', 'UTF-8', $tableComment);
+        }
         $input->setOption('table_comment', $tableComment);
         
         // format
@@ -404,7 +407,11 @@ EOT
                 $data['unique'] = $unique;
             }
             $question = new Question($questionHelper->getQuestion('Options:comment', ''), '');
-            $data['options']['comment'] = $questionHelper->ask($input, $output, $question);
+            $comment = $questionHelper->ask($input, $output, $question);
+            if(false === mb_detect_encoding($comment, 'UTF-8')){
+                $comment = iconv('GB2312', 'UTF-8', $comment);
+            }
+            $data['options']['comment'] = $comment;
             
             $fields[$columnName] = $data;
         }
