@@ -66,7 +66,15 @@ class DoctrineEntityGenerator extends Generator
         $entityGenerator = $this->getEntityGenerator();
         if ('annotation' === $format) {
             $entityGenerator->setGenerateAnnotations(true);
-            $class->setPrimaryTable(array('name' => $bundle->getName .'_'. Inflector::tableize(str_replace('\\', '', $entity)), 'options' => $tableOptions));
+            $class->setPrimaryTable(array('name' => strtolower(substr($bundle->getName(), 0, -6)) .'_'. Inflector::tableize(str_replace('\\', '', $entity)), 'options' => $tableOptions));
+            $class->setLifecycleCallbacks([
+                'prePersist' => [
+                    'prePersist',
+                ],
+                'preUpdate' => [
+                    'preUpdate',
+                ]
+            ]);
             $entityCode = $entityGenerator->generateEntityClass($class);
             $mappingPath = $mappingCode = false;
         } else {
