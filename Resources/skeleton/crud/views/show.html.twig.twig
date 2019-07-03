@@ -1,11 +1,12 @@
 {% block extends %}
-{{ "{% extends 'base.html.twig' %}" }}
+{{ "{% extends 'layout.html.twig' %}" }}
 {% endblock extends %}
 
 {% block body %}
-{{ "{% block body %}" }}
-    <h1>{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_singularized|capitalize }}{% endif %}</h1>
-
+{{ "{% block content %}" }}
+    <blockquote>
+    	<strong>{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_singularized|capitalize }}{% endif %}</strong>
+    </blockquote>
     <table class="table">
         <tbody>
         {%- for field, metadata in fields %}

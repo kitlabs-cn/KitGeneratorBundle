@@ -1,13 +1,13 @@
 {% block extends %}
-{{ "{% extends 'base.html.twig' %}" }}
+{{ "{% extends 'layout.html.twig' %}" }}
 {% endblock extends %}
 
 {% block body %}
 {{ "{% block css %}" }}
 {{ "{% endblock %}" }}
-{{ "{% block body %}" }}
+{{ "{% block content %}" }}
 	<div class="line">
-        <div class="x8">
+        <div class="x10">
         {{ '{% for error in errors %}' }}
         <div class="alert alert-yellow">
             <span class="close rotate-hover"></span><strong>提示：</strong>{{ '{{ error }}' }}

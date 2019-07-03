@@ -1,9 +1,9 @@
 {% block extends %}
-{{ "{% extends 'base.html.twig' %}" }}
+{{ "{% extends 'layout.html.twig' %}" }}
 {% endblock extends %}
 
 {% block body %}
-{{ "{% block body %}" }}
+{{ "{% block content %}" }}
     	<div class="panel admin-panel">
     		<div class="panel-head">
     			<strong>{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}列表</strong>&nbsp;&nbsp;&nbsp;
