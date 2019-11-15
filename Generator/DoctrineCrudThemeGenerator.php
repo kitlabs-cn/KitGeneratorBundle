@@ -140,6 +140,7 @@ class DoctrineCrudThemeGenerator extends Generator
             'bundle' => $this->bundle->getName(),
             'entity' => $this->entity,
             'identifier' => $this->metadata->identifier[0],
+            'table' => $this->metadata->table,
         ));
     }
 
