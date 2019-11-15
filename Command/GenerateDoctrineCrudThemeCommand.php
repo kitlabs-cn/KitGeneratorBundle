@@ -251,7 +251,7 @@ EOT
         // first, import the routing file from the bundle's main routing.yml file
         $routing = new RoutingManipulator($bundle->getPath().'/Resources/config/routing.yml');
         try {
-            $ret = $auto ? $routing->addResource($bundle->getName(), $format, '/'.$prefix, 'routing/'.strtolower(str_replace('\\', '_', $entity))) : false;
+            $ret = $auto ? $this->addResourceEntity($routing, $bundle->getName(), $format, '/'.$prefix, 'routing/'.strtolower(str_replace('\\', '_', $entity)), $entity) : false;
         } catch (\RuntimeException $exc) {
             $ret = false;
         }
@@ -300,6 +300,54 @@ EOT
                 '',
             );
         }
+    }
+
+    /**
+     * @modifier yaoyanan<904381790@qq.com>
+     * Adds a routing resource at the top of the existing ones.
+     *
+     * @param string $bundle
+     * @param string $format
+     * @param string $prefix
+     * @param string $path
+     *
+     * @return bool Whether the operation succeeded
+     *
+     * @throws \RuntimeException If bundle is already imported
+     *
+     * @see \Sensio\Bundle\GeneratorBundle\Manipulator\RoutingManipulator::addResource
+     */
+    public function addResourceEntity($routing, $bundle, $format, $prefix = '/', $path = 'routing', $entity = '')
+    {
+        $current = '';
+        $code = sprintf("%s:\n", $routing->getImportedResourceYamlKey($bundle, $prefix));
+
+        $getFileFun = function(){return $this->file;};
+        $file = $getFileFun->call($routing);
+        if (file_exists($file)) {
+            $current = file_get_contents($file);
+
+            if ($entity && false !== strpos($current, strtolower($bundle).'_'.strtolower($entity).':')) {
+                throw new \RuntimeException(sprintf('Entity "%s" is already imported.', $bundle));
+            }
+        } elseif (!is_dir($dir = dirname($file))) {
+            Generator::mkdir($dir);
+        }
+
+        if ('annotation' == $format) {
+            $code .= sprintf("    resource: \"@%s/Controller/\"\n    type:     annotation\n", $bundle);
+        } else {
+            $code .= sprintf("    resource: \"@%s/Resources/config/%s.%s\"\n", $bundle, $path, $format);
+        }
+        $code .= sprintf("    prefix: %s\n", $prefix);
+
+        $code = $current."\n\n".$code;
+
+        if (false === Generator::dump($file, $code)) {
+            return false;
+        }
+
+        return true;
     }
 
     protected function updateAnnotationRouting(BundleInterface $bundle, $entity, $prefix)

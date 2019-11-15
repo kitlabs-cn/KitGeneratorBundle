@@ -1,29 +1,87 @@
 {% if 'index' in actions %}
+{{ route_name_prefix }}_homepage:
+    path:     /
+    defaults: { _controller: "{{ bundle }}:{{ entity }}:index" }
+    options:
+        menu:
+            name: "{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}" # 路由中文名称
+            icon: "" #路由小图标，无则留空
+            status: 1 #路由状态，1启用，0禁用
+            is_show: 1 #是否显示，1显示，0不显示
+            is_authorize: 1 #是否需要授权访问，1授权才能访问，0无须授权（即不需要配置该路由就能进行访问）
+            level: 2 #路由级别
+            parent_route: {{ bundle|lower|replace({'bundle': ''}) }}_homepage #上一级路由名称
+
 {{ route_name_prefix }}_index:
     path:     /index
     defaults: { _controller: "{{ bundle }}:{{ entity }}:index" }
+    options:
+        menu:
+            name: "{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}列表" # 路由中文名称
+            icon: "" #路由小图标，无则留空
+            status: 1 #路由状态，1启用，0禁用
+            is_show: 1 #是否显示，1显示，0不显示
+            is_authorize: 1 #是否需要授权访问，1授权才能访问，0无须授权（即不需要配置该路由就能进行访问）
+            level: 3 #路由级别
+            parent_route: {{ route_name_prefix }}_homepage #上一级路由名称
 {% endif %}
 
 {% if 'show' in actions %}
 {{ route_name_prefix }}_show:
     path:     /show
     defaults: { _controller: "{{ bundle }}:{{ entity }}:show" }
+    options:
+        menu:
+            name: "{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}查看" # 路由中文名称
+            icon: "" #路由小图标，无则留空
+            status: 1 #路由状态，1启用，0禁用
+            is_show: 0 #是否显示，1显示，0不显示
+            is_authorize: 1 #是否需要授权访问，1授权才能访问，0无须授权（即不需要配置该路由就能进行访问）
+            level: 3 #路由级别
+            parent_route: {{ route_name_prefix }}_homepage #上一级路由名称
 {% endif %}
 
 {% if 'new' in actions %}
 {{ route_name_prefix }}_new:
     path:     /new
     defaults: { _controller: "{{ bundle }}:{{ entity }}:new" }
+    options:
+        menu:
+            name: "{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}创建" # 路由中文名称
+            icon: "" #路由小图标，无则留空
+            status: 1 #路由状态，1启用，0禁用
+            is_show: 0 #是否显示，1显示，0不显示
+            is_authorize: 1 #是否需要授权访问，1授权才能访问，0无须授权（即不需要配置该路由就能进行访问）
+            level: 3 #路由级别
+            parent_route: {{ route_name_prefix }}_homepage #上一级路由名称
 {% endif %}
 
 {% if 'edit' in actions %}
 {{ route_name_prefix }}_edit:
     path:     /edit
     defaults: { _controller: "{{ bundle }}:{{ entity }}:edit" }
+    options:
+        menu:
+            name: "{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}编辑" # 路由中文名称
+            icon: "" #路由小图标，无则留空
+            status: 1 #路由状态，1启用，0禁用
+            is_show: 0 #是否显示，1显示，0不显示
+            is_authorize: 1 #是否需要授权访问，1授权才能访问，0无须授权（即不需要配置该路由就能进行访问）
+            level: 3 #路由级别
+            parent_route: {{ route_name_prefix }}_homepage #上一级路由名称
 {% endif %}
 
 {% if 'delete' in actions %}
 {{ route_name_prefix }}_delete:
     path:     /delete
     defaults: { _controller: "{{ bundle }}:{{ entity }}:delete" }
+    options:
+        menu:
+            name: "{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}删除" # 路由中文名称
+            icon: "" #路由小图标，无则留空
+            status: 1 #路由状态，1启用，0禁用
+            is_show: 0 #是否显示，1显示，0不显示
+            is_authorize: 1 #是否需要授权访问，1授权才能访问，0无须授权（即不需要配置该路由就能进行访问）
+            level: 3 #路由级别
+            parent_route: {{ route_name_prefix }}_homepage #上一级路由名称
 {% endif %}
