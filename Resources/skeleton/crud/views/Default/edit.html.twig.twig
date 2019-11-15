@@ -1,20 +1,16 @@
 {% block extends %}
-{{ "{% extends 'layout.html.twig' %}" }}
+    {{ "{% extends 'layout.html.twig' %}" }}
 {% endblock extends %}
 
 {% block body %}
 {{ "{% block css %}" }}
+    <link rel="stylesheet" href="{{ '{{ asset(\'css/research.css?v=1024\'|theme) }}' }}">
+    <link rel="stylesheet" href="{{ '{{ asset(\'css/popup_page.css?v=1024\'|theme) }}' }}">
 {{ "{% endblock %}" }}
-{{ "{% block content %}" }}
-	<div class="line">
-        <div class="x10">
-        {{ '{% for error in errors %}' }}
-        <div class="alert alert-yellow">
-            <span class="close rotate-hover"></span><strong>提示：</strong>{{ '{{ error }}' }}
-        </div>
-        {{ '{% endfor %}' }}
-            {{  "{{ form(form, {'attr': {'novalidate': 'novalidate', 'class': 'form-x', 'id': 'form'}}) }}" }}
-        </div>
+{{ "{% block body %}" }}
+	<div class="notice_add">
+        {{ '{{ form_errors_tips(errors)|raw }}' }}
+        {{  "{{ form(form, {'attr': {'novalidate': 'novalidate', 'class': 'form-x', 'id': 'form'}}) }}" }}
     </div>
 {{ "{% endblock %}" }}
 {{ "{% block js %}" }}
