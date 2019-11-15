@@ -33,10 +33,7 @@ class {{ form_class }} extends AbstractType
                 ])
                 {% endif %}
                 {% endif %}
-            {%- endfor %}
-	->add('submit', SubmitType::class, [
-                'label' => '提交'
-            ]);
+            {%- endfor %};
     }
     {%- endif -%}
 

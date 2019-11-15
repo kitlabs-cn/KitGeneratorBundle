@@ -21,7 +21,7 @@
 				{%- endfor %}
 
 			], [
-				{{ 'session_menu_access(\'' ~ route_name_prefix ~ '_new\')' }} ? '<button type="button" class="button notice_add" onclick="popupPage(\'新增{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}\',\'' ~ path('{{ route_name_prefix ~'_new' }}') ~ '\')"><span class="icon-plus"></span>新增</button>' : '',
+				{{ 'session_menu_access(\'' ~ route_name_prefix ~ '_new\')' }} ? '<button type="button" class="button notice_add" onclick="popupPage(\'新增{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}\',\'' ~ path('{{ route_name_prefix ~'_new' }}') ~ '\', 1)"><span class="icon-plus"></span>新增</button>' : '',
 			])
 		{{ '}}' }}
 		<div class="list_box">
@@ -60,10 +60,10 @@
 					{% endfor -%}
 					<td>
 						{{ '{% if session_menu_access(\'' ~ route_name_prefix ~ '_edit\') %}' }}
-							<button type="button" class="button" onclick="popupPage('编辑', '{{ '{{ path(\'' ~ route_name_prefix ~'_edit\', { \'id\': item.id }) }}' }}')"><span class="icon-edit"></span>编辑</button>
+							<button type="button" class="button" onclick="popupPage('编辑', '{{ '{{ path(\'' ~ route_name_prefix ~'_edit\', { \'id\': item.id }) }}' }}', 1)"><span class="icon-edit"></span>编辑</button>
 						{{ '{% endif %}' }}
 						{{ '{% if session_menu_access(\'' ~ route_name_prefix ~ '_delete\') %}' }}
-							<button type="button" class="button" onclick="{if(confirm('确认删除?')){return delItem({{ '{{ item.id }}' }});}returnfalse;}"><span class="icon-times-circle"></span>删除</button>
+							<button type="button" class="button" onclick="{if(confirm('确认删除?')){return delItem({{ '{{ item.id }}' }});}return false;}"><span class="icon-times-circle"></span>删除</button>
 						{{ '{% endif %}' }}
 					</td>
 				</tr>
