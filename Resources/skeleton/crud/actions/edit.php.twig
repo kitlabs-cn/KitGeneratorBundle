@@ -24,7 +24,7 @@
          */
         ${{ entity_singularized }} = $this->getDoctrine()->getRepository('{{ bundle }}:{{ entity }}')->find($id);
         if(empty(${{ entity_singularized }})){
-        	return $this->msgResponse(1, '警告', '改记录不存在或已被删除','{{ route_name_prefix }}_index');
+        	return $this->frameMsgResponse(1, '警告', '改记录不存在或已被删除','{{ route_name_prefix }}_index');
         }
         {% if use_form_type_instance -%}
             $form = $this->createForm(new {{ entity_singularized|capitalize }}Type(), ${{ entity_singularized }});
@@ -36,7 +36,7 @@
         if ($form->isSubmitted()){
         	if($form->isValid()) {
             	$this->getDoctrine()->getManager()->flush();
-           		return $this->msgResponse(0, '提示', '修改成功','{{ route_name_prefix }}_index');
+           		return $this->frameMsgResponse(0, '提示', '修改成功');
             }else{
                 $errors = $this->serializeFormErrors($form);
             }

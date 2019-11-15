@@ -1,49 +1,52 @@
 {% block extends %}
-{{ "{% extends 'layout.html.twig' %}" }}
+    {{ "{% extends 'layout.html.twig' %}" }}
 {% endblock extends %}
 
 {% block body %}
+{{ "{% block css %}" }}
+<link rel="stylesheet" href="{{ '{{ asset(\'css/research.css?v=1024\'|theme) }}' }}">
+<link rel="stylesheet" href="{{ '{{ asset(\'css/popup_page.css?v=1024\'|theme) }}' }}">
+{{ "{% endblock %}" }}
 {{ "{% block body %}" }}
-	<blockquote>
-    	<strong>{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_singularized|capitalize }}{% endif %}</strong>
-    </blockquote>
-    <table class="table table-responsive">
-        <tbody>
-        {%- for field, metadata in fields %}
-            <tr>
-                <td>{% if metadata.options.comment is defined %}{{ metadata.options.comment }}{% else %}{{ field|capitalize }}{% endif %}</td>
+    <div class="notice_details">
+        <div class="noticeCon">
+            <table class="table table-responsive">
+                <tbody>
+                    {% for field, metadata in fields -%}
+                        <tr>
+                            <td>{% if metadata.options.comment is defined %}{{ metadata.options.comment }}{% else %}{{ field|capitalize }}{% endif %}</td>
 
-            {%- if metadata.type in ['datetime'] %}
+                            {%- if metadata.type in ['datetime'] %}
 
-                <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d H:i:s\') }}{% endif %}' }}</td>
+                            <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d H:i:s\') }}{% endif %}' }}</td>
 
-            {%- elseif metadata.type in ['date'] %}
+                            {%- elseif metadata.type in ['date'] %}
 
-                <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d\') }}{% endif %}' }}</td>
+                            <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d\') }}{% endif %}' }}</td>
 
-            {%- elseif metadata.type in ['time'] %}
+                            {%- elseif metadata.type in ['time'] %}
 
-                <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'H:i:s\') }}{% endif %}' }}</td>
+                            <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'H:i:s\') }}{% endif %}' }}</td>
 
-            {%- elseif metadata.type in ['array'] %}
+                            {%- elseif metadata.type in ['array'] %}
 
-                <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|join(\', \') }}{% endif %}' }}</td>
+                            <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|join(\', \') }}{% endif %}' }}</td>
 
-            {%- elseif metadata.type in ['boolean'] %}
+                            {%- elseif metadata.type in ['boolean'] %}
 
-                <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}Yes{% else %}No{% endif %}' }}</td>
+                            <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}Yes{% else %}No{% endif %}' }}</td>
 
-            {%- else %}
+                            {%- else %}
 
-                <td>{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' }}' }}</td>
+                            <td>{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' }}' }}</td>
 
-            {%- endif %}
+                            {%- endif %}
 
-            </tr>
-
-        {%- endfor %}
-
-        </tbody>
-    </table>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 {{ "{% endblock %}" }}
 {% endblock body %}

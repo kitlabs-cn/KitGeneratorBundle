@@ -2,48 +2,79 @@
 {{ "{% extends 'layout.html.twig' %}" }}
 {% endblock extends %}
 
+{{ "{% block css %}" }}
+<link rel="stylesheet" href="{{ "{{ asset('css/research.css?v=1024'|theme)" }} }}">
+{{ "{% endblock %}" }}
+
 {% block body %}
 {{ "{% block content %}" }}
-    	<div class="panel admin-panel">
-    		<div class="panel-head">
-    			<strong>{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}列表</strong>&nbsp;&nbsp;&nbsp;
-    			<a class="button bg-blue" href="{{ '{{ path(\'' ~ route_name_prefix ~'_new\') }}' }}">新增</a>
-    		</div>
-    		<table class="table table-hover">
-    			<tr>{%- for field, metadata in fields %}
-    					{% if metadata.options.comment is defined %}
-    						<th>{{ metadata.options.comment }}</th>
-    					{% else %}
-    						<th>{{ field|capitalize }}</th>
-    					{% endif %}
-                    {%- endfor %}
-    				<th width="200">操作</th>
-    			</tr>
-    		{{'{% if pagination is defined and pagination is not empty %}' }}
-            {{ '{% for item in pagination %}' }}
-    			<tr id="item_{{ '{{ item.id }}' }}">
-    				{% for field, metadata in fields %}
-    					<td>{%- if metadata.type in ['datetime'] -%}
-    						{{ '{{ item.' ~ field ~ '|date(\'Y-m-d H:i:s\') }}' }}
-    					{%- else -%}
-    					{{ '{{ item.' ~ field ~ ' }}' }}
-    					{%- endif %}</td>
-    				{% endfor -%}
-    				<td>
-    					<a class="button border-yellow button-little" href="{{ '{{ path(\'' ~ route_name_prefix ~'_edit\', { \'id\': item.id }) }}' }}">编辑</a>
-    				    <a class="button border-green button-little" href="{{ '{{ path(\'' ~ route_name_prefix ~'_show\', { \'id\': item.id }) }}' }}">查看</a>
-    				    <a class="button border-red button-little" href="#" onclick="{
-    					if(confirm('确认删除?')){return delItem({{ '{{ item.id }}' }});}returnfalse;}">删除</a>
-    				    </td>
-    			</tr>
-    			{{ '{% endfor %}' }}
-    			{{ '{% else %}' }}
-                {% set num = (fields|length) + 1 %}
-        		{{ '{{ macro_no_content('~ num ~') }}' }}
-    			{{ '{% endif %}' }}
-    		</table>
-    			{{ '{{ knp_pagination_render(pagination,\'pagination.html.twig\') }}' }}
-    	</div>
+		{{ '{{' }}
+			config_search([
+				{% for field, metadata in fields -%}
+					{%- if loop.index < 4 -%}
+						{% if metadata.options.comment is defined -%}
+							config_search_getFieldHtml('{{ metadata.options.comment }}', '{{ field }}'),
+						{% else -%}
+							config_search_getFieldHtml('{{ field|capitalize }}', '{{ field }}'),
+						{% endif %}
+					{%- endif %}
+				{%- endfor %}
+
+			], [
+				{{ 'session_menu_access(\'' ~ route_name_prefix ~ '_new\')' }} ? '<button type="button" class="button notice_add" onclick="popupPage(\'新增{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}\',\'' ~ path('{{ route_name_prefix ~'_new' }}') ~ '\')"><span class="icon-plus"></span>新增</button>' : '',
+			])
+		{{ '}}' }}
+		<div class="list_box">
+			<table class="table listTable">
+				<tr>
+					{% for field, metadata in fields -%}
+						<th>
+							{%- if metadata.options.comment is defined -%}
+								{{ metadata.options.comment }}
+							{%- else -%}
+								{{ field|capitalize }}
+							{%- endif -%}
+						</th>
+					{% endfor -%}
+					<th width="200">操作</th>
+				</tr>
+				{{'{% if pagination is defined and pagination is not empty %}' }}
+				{{ '{% for item in pagination %}' }}
+				{% set isSetTitle = false -%}
+				<tr id="item_{{ '{{ item.id }}' }}">
+					{% for field, metadata in fields -%}
+						<td>
+							{%- if isSetTitle == false and metadata.type == 'string' -%}
+								{%- set isSetTitle = true -%}
+								<a class="notice_tit" href="javascript:;" onclick="popupPage('{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}详情','{{ '{{ path(\'' ~ route_name_prefix ~'_show\', { \'id\': item.id }) }}' }}')">{{ '{{ item.' ~ field ~ '|truncate(20,false,\'...\') }}' }}</a>
+							{%- else -%}
+								{%- if metadata.type in ['datetime'] -%}
+									{{ '{{ item.' ~ field ~ '|date(\'Y-m-d H:i:s\') }}' }}
+								{%- elseif metadata.type in ['string', 'text'] -%}
+									{{ '{{ item.' ~ field ~ '|truncate(20,false,\'...\') }}' }}
+								{%- else -%}
+									{{- '{{ item.' ~ field ~ ' }}' -}}
+								{%- endif -%}
+							{%- endif -%}
+						</td>
+					{% endfor -%}
+					<td>
+						{{ '{% if session_menu_access(\'' ~ route_name_prefix ~ '_edit\') %}' }}
+							<button type="button" class="button" onclick="popupPage('编辑', '{{ '{{ path(\'' ~ route_name_prefix ~'_edit\', { \'id\': item.id }) }}' }}')"><span class="icon-edit"></span>编辑</button>
+						{{ '{% endif %}' }}
+						{{ '{% if session_menu_access(\'' ~ route_name_prefix ~ '_delete\') %}' }}
+							<button type="button" class="button" onclick="{if(confirm('确认删除?')){return delItem({{ '{{ item.id }}' }});}returnfalse;}"><span class="icon-times-circle"></span>删除</button>
+						{{ '{% endif %}' }}
+					</td>
+				</tr>
+				{{ '{% endfor %}' }}
+				{{ '{% else %}' }}
+					{% set num = (fields|length) + 1 -%}
+					{{ '{{ macro_no_content('~ num ~') }}' }}
+				{{ '{% endif %}' }}
+			</table>
+			{{ '{{ knp_pagination_render(pagination,\'pagination.html.twig\') }}' }}
+		</div>
 {{ "{% endblock %}" }}
 {{ '{% block js %}' }}
 <script>
