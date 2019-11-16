@@ -16,6 +16,7 @@ use Kit\GeneratorBundle\Generator\DoctrineCrudThemeGenerator;
 use Kit\GeneratorBundle\Generator\DoctrineFormGenerator;
 use Sensio\Bundle\GeneratorBundle\Manipulator\RoutingManipulator;
 use Kit\GeneratorBundle\Command\GenerateDoctrineCommand;
+use Sensio\Bundle\GeneratorBundle\Generator\Generator;
 use Sensio\Bundle\GeneratorBundle\Command\Validators;
 
 /**
@@ -41,7 +42,7 @@ class GenerateDoctrineCrudThemeCommand extends GenerateDoctrineCommand
             ->addOption('theme', null, InputOption::VALUE_OPTIONAL, 'The views theme name')
             ->addOption('route-prefix', null, InputOption::VALUE_REQUIRED, 'The route prefix')
             ->addOption('with-write', null, InputOption::VALUE_NONE, 'Whether or not to generate create, new and delete actions')
-            ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The format used for configuration files (php, xml, yml, or annotation)', 'annotation')
+            ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The format used for configuration files (php, xml, yml, or annotation)', 'yml')
             ->addOption('overwrite', null, InputOption::VALUE_NONE, 'Overwrite any existing controller or form class when generating the CRUD contents')
             ->setHelp(<<<EOT
 The <info>%command.name%</info> command generates a CRUD based on a Doctrine entity.
@@ -126,21 +127,21 @@ EOT
 
         $errors = array();
         $questionHelper->getRunner($output, $errors);
-        //$runner = $questionHelper->getRunner($output, $errors);
+        $runner = $questionHelper->getRunner($output, $errors);
 
         // form
-//         if ($withWrite) {
-//             $this->generateForm($bundle, $entity, $metadata, $forceOverwrite);
-//             $output->writeln('Generating the Form code: <info>OK</info>');
-//         }
+         if ($withWrite) {
+             $this->generateForm($bundle, $entity, $metadata, $forceOverwrite);
+             $output->writeln('Generating the Form code: <info>OK</info>');
+         }
 
         // routing
-//         $output->write('Updating the routing: ');
-//         if ('annotation' != $format) {
-//             $runner($this->updateRouting($questionHelper, $input, $output, $bundle, $format, $entity, $prefix));
-//         } else {
-//             $runner($this->updateAnnotationRouting($bundle, $entity, $prefix));
-//         }
+         $output->write('Updating the routing: ');
+         if ('annotation' != $format) {
+             $runner($this->updateRouting($questionHelper, $input, $output, $bundle, $format, $entity, $prefix));
+         } else {
+             $runner($this->updateAnnotationRouting($bundle, $entity, $prefix));
+         }
 
         $questionHelper->writeGeneratorSummary($output, $errors);
     }
@@ -185,7 +186,7 @@ EOT
         }
 
         // write?
-        $withWrite = $input->getOption('with-write') ?: false;
+        $withWrite = $input->getOption('with-write') ?: true;
         $output->writeln(array(
             '',
             'By default, the generator creates two actions: list and show.',

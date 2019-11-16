@@ -71,7 +71,7 @@ class DoctrineCrudThemeGenerator extends Generator
         $this->metadata = $metadata;
         $this->setFormat($format);
 
-//         $this->generateControllerClass($forceOverwrite);
+         $this->generateControllerClass($forceOverwrite);
 
         $dir = sprintf('./src/%s/Resources/views/%s/%s', $this->bundle->getName(), $theme, $entity);
 
@@ -93,8 +93,8 @@ class DoctrineCrudThemeGenerator extends Generator
             $this->generateEditView($dir, $theme);
         }
 
-//         $this->generateTestClass();
-//         $this->generateConfiguration();
+         $this->generateTestClass();
+         $this->generateConfiguration();
     }
 
     /**

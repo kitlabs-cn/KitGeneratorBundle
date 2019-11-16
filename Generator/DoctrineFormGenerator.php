@@ -66,8 +66,12 @@ class DoctrineFormGenerator extends Generator
         $parts = explode('\\', $entity);
         array_pop($parts);
 
+        $fields = $this->getFieldsFromMetadata($metadata);
+
+        $privateFieldArr = $this->getEntityPrivateField($bundle, $entity, $fields);
+
         $this->renderFile('form/FormType.php.twig', $this->classPath, array(
-            'fields' => $this->getFieldsFromMetadata($metadata),
+            'fields' => $fields,
             'namespace' => $bundle->getNamespace(),
             'entity_namespace' => implode('\\', $parts),
             'entity_class' => $entityClass,
@@ -76,7 +80,26 @@ class DoctrineFormGenerator extends Generator
             'form_type_name' => strtolower(str_replace('\\', '_', $bundle->getNamespace()).($parts ? '_' : '').implode('_', $parts).'_'.substr($this->className, 0, -4)),
             // BC with Symfony 2.7
             'get_name_required' => !method_exists('Symfony\Component\Form\AbstractType', 'getBlockPrefix'),
+            'privateFieldArr' => $privateFieldArr,
         ));
+    }
+
+    public function getEntityPrivateField(BundleInterface $bundle, $entity, $fields)
+    {
+        $privateFieldArr = [];
+
+        if (!class_exists($entity)) {
+            $entityClassCompName = $bundle->getNamespace().'\\Entity\\'.$entity;
+        } else {
+            $entityClassCompName = $entity;
+        }
+        foreach ($fields as $field) {
+            $_fun = 'set'.ucfirst($field['fieldName']);
+            if (class_exists($entityClassCompName) && !is_callable([$entityClassCompName, $_fun])) {
+                $privateFieldArr[] = $field['fieldName'];
+            }
+        }
+        return $privateFieldArr;
     }
 
     /**
