@@ -4,15 +4,50 @@
 
 {% block body %}
 {{ "{% block css %}" }}
-    <link rel="stylesheet" href="{{ '{{ asset(\'css/research.css?v=1024\'|theme) }}' }}">
-    <link rel="stylesheet" href="{{ '{{ asset(\'css/popup_page.css?v=1024\'|theme) }}' }}">
+<link rel="stylesheet" href="{{ '{{ asset(\'css/inform_table.css?v=1024\'|theme) }}' }}">
+<link rel="stylesheet" href="{{ '{{ asset(\'css/popup_page.css?v=1024\'|theme) }}' }}">
 {{ "{% endblock %}" }}
 {{ "{% block body %}" }}
-	<div class="notice_add">
-        {{ '{{ form_errors_tips(errors)|raw }}' }}
-        {{  "{{ form(form, {'attr': {'novalidate': 'novalidate', 'class': 'form-x add_form', 'id': 'form'}}) }}" }}
-    </div>
-{{ "{% endblock %}" }}
-{{ "{% block js %}" }}
+{{ '{{ form_errors_tips(errors)|raw }}' }}
+<div class="informCon">
+    {{  "{{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'form-x', 'id': 'form'}}) }}" }}
+    <table class="table informTable">
+        {% set _nowTd = 0 -%}
+        {% for field, metadata in fields -%}
+            {% if privateFieldArr is not empty and field not in privateFieldArr -%}
+                {% set _nowTd = _nowTd + 1 -%}
+                {% if _nowTd == 1 -%}
+                    <tr>
+                {% endif -%}
+
+                {% if metadata.type in ['text'] -%}
+
+                    {%- if _nowTd == 2 -%}
+                        </tr>
+                        <tr>
+                    {%- endif -%}
+                    <td class="td_head">{{ '{{ form_label(form.' ~ field ~ ') }}' }}</td>
+                    <td colspan="3">{{ '{{ form_widget(form.' ~ field ~ ') }}' }}</td>
+                    {%- set _nowTd = 2 -%}
+
+                {% else -%}
+                    <td class="td_head">{{ '{{ form_label(form.' ~ field ~ ') }}' }}</td>
+                    <td>{{ '{{ form_widget(form.' ~ field ~ ') }}' }}</td>
+
+                {%- endif %}
+
+                {% if _nowTd >= 2 -%}
+                    {% set _nowTd = 0 -%}
+                    </tr>
+                {%- endif %}
+            {%- endif -%}
+        {%- endfor -%}
+
+        {%- if _nowTd == 1 %}
+            </tr>
+        {% endif %}
+    </table>
+    {{  "{{ form_end(form) }}" }}
+</div>
 {{ "{% endblock %}" }}
 {% endblock body %}

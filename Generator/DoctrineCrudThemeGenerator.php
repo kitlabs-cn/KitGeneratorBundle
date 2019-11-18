@@ -71,8 +71,14 @@ class DoctrineCrudThemeGenerator extends Generator
         $this->metadata = $metadata;
         $this->setFormat($format);
 
-         $this->generateControllerClass($forceOverwrite);
+        // controller
+        try {
+            $this->generateControllerClass($forceOverwrite);
+        } catch (\Exception $e) {
+            echo PHP_EOL . 'generator controller faild!' . PHP_EOL . $e->getMessage() . PHP_EOL.PHP_EOL;
+        }
 
+        // view
         $dir = sprintf('./src/%s/Resources/views/%s/%s', $this->bundle->getName(), $theme, $entity);
 
         if (!file_exists($dir)) {
@@ -93,8 +99,11 @@ class DoctrineCrudThemeGenerator extends Generator
             $this->generateEditView($dir, $theme);
         }
 
-         $this->generateTestClass();
-         $this->generateConfiguration();
+        // test
+        $this->generateTestClass();
+
+        // route
+        $this->generateConfiguration();
     }
 
     /**
@@ -258,6 +267,8 @@ class DoctrineCrudThemeGenerator extends Generator
      */
     protected function generateNewView($dir, $theme)
     {
+        $privateFieldArr = $this->getEntityPrivateField($this->bundle, $this->entity, $this->metadata->fieldMappings);
+
         $this->renderFile('crud/views/'.$theme.'/new.html.twig.twig', $dir.'/new.html.twig', array(
             'bundle' => $this->bundle->getName(),
             'entity' => $this->entity,
@@ -267,6 +278,7 @@ class DoctrineCrudThemeGenerator extends Generator
             'actions' => $this->actions,
             'table' => $this->metadata->table,
             'fields' => $this->metadata->fieldMappings,
+            'privateFieldArr' => $privateFieldArr,
         ));
     }
 
@@ -277,6 +289,8 @@ class DoctrineCrudThemeGenerator extends Generator
      */
     protected function generateEditView($dir, $theme)
     {
+        $privateFieldArr = $this->getEntityPrivateField($this->bundle, $this->entity, $this->metadata->fieldMappings);
+
         $this->renderFile('crud/views/'.$theme.'/edit.html.twig.twig', $dir.'/edit.html.twig', array(
             'route_prefix' => $this->routePrefix,
             'route_name_prefix' => $this->routeNamePrefix,
@@ -287,6 +301,7 @@ class DoctrineCrudThemeGenerator extends Generator
             'bundle' => $this->bundle->getName(),
             'table' => $this->metadata->table,
             'actions' => $this->actions,
+            'privateFieldArr' => $privateFieldArr,
         ));
     }
 
@@ -311,5 +326,4 @@ class DoctrineCrudThemeGenerator extends Generator
 
         return strtolower(substr($bundle->getName(), 0, -6)).'_'.$prefix;
     }
-    
 }

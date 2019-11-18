@@ -3,7 +3,7 @@
 {% endblock extends %}
 
 {{ "{% block css %}" }}
-<link rel="stylesheet" href="{{ "{{ asset('css/research.css?v=1024'|theme)" }} }}">
+<link rel="stylesheet" href="{{ "{{ asset('css/research.css?v=1024'|theme) }}" }}">
 {{ "{% endblock %}" }}
 
 {% block body %}
@@ -21,7 +21,7 @@
 				{%- endfor %}
 
 			], [
-				{{ 'session_menu_access(\'' ~ route_name_prefix ~ '_new\')' }} ? '<button type="button" class="button notice_add" onclick="popupPage(\'新增{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}\',\'' ~ path('{{ route_name_prefix ~'_new' }}') ~ '\', 1)"><span class="icon-plus"></span>新增</button>' : '',
+				{{ 'session_menu_access(\'' ~ route_name_prefix ~ '_new\')' }} ? '<button type="button" class="button notice_add" onclick="PopupPage.open(\'新增{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}\',\'' ~ path('{{ route_name_prefix ~'_new' }}') ~ '\', [\'保存\',\'关闭\'])"><span class="icon-plus"></span>新增</button>' : '',
 			])
 		{{ '}}' }}
 		<div class="list_box">
@@ -36,7 +36,6 @@
 							{%- endif -%}
 						</th>
 					{% endfor -%}
-					<th width="200">操作</th>
 				</tr>
 				{{'{% if pagination is defined and pagination is not empty %}' }}
 				{{ '{% for item in pagination %}' }}
@@ -46,7 +45,7 @@
 						<td>
 							{%- if isSetTitle == false and metadata.type == 'string' -%}
 								{%- set isSetTitle = true -%}
-								<a class="notice_tit" href="javascript:;" onclick="popupPage('{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}详情','{{ '{{ path(\'' ~ route_name_prefix ~'_show\', { \'id\': item.id }) }}' }}')">{{ '{{ item.' ~ field ~ '|truncate(20,false,\'...\') }}' }}</a>
+								<a class="notice_tit" href="javascript:;" onclick="PopupPage.open('{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}详情','{{ '{{ path(\'' ~ route_name_prefix ~'_show\', { \'id\': item.id }) }}' }}',['编辑', '删除', '关闭'])">{{ '{{ item.' ~ field ~ '|truncate(20,false,\'...\') }}' }}</a>
 							{%- else -%}
 								{%- if metadata.type in ['datetime'] -%}
 									{{ '{{ item.' ~ field ~ '|date(\'Y-m-d H:i:s\') }}' }}
@@ -58,18 +57,10 @@
 							{%- endif -%}
 						</td>
 					{% endfor -%}
-					<td>
-						{{ '{% if session_menu_access(\'' ~ route_name_prefix ~ '_edit\') %}' }}
-							<button type="button" class="button" onclick="popupPage('编辑', '{{ '{{ path(\'' ~ route_name_prefix ~'_edit\', { \'id\': item.id }) }}' }}', 1)"><span class="icon-edit"></span>编辑</button>
-						{{ '{% endif %}' }}
-						{{ '{% if session_menu_access(\'' ~ route_name_prefix ~ '_delete\') %}' }}
-							<button type="button" class="button" onclick="{if(confirm('确认删除?')){return delItem({{ '{{ item.id }}' }});}return false;}"><span class="icon-times-circle"></span>删除</button>
-						{{ '{% endif %}' }}
-					</td>
 				</tr>
 				{{ '{% endfor %}' }}
 				{{ '{% else %}' }}
-					{% set num = (fields|length) + 1 -%}
+					{% set num = (fields|length) -%}
 					{{ '{{ macro_no_content('~ num ~') }}' }}
 				{{ '{% endif %}' }}
 			</table>
@@ -77,17 +68,51 @@
 		</div>
 {{ "{% endblock %}" }}
 {{ '{% block js %}' }}
+<script src="{{ "{{ asset('js/popup_page.js?v=1027'|theme) }}" }}"></script>
 <script>
-   function delItem(id){
-	   $.post("{{ '{{ path(\'' ~ route_name_prefix ~ '_delete\') }}' }}", { id: id },
-			   function(data){
-			     if(data.code == 1){
-				     $('#item_'+id).hide();
-				     	layer.msg(data.msg);
-				     }else{
-				    	 layer.msg(data.msg);}
-			   }, "json");
-	}
+
+   // 弹出层按钮操作注册 - 保存
+   PopupPage.registerBtnCallBack('保存', function(iframeWin){
+	   $(iframeWin.document.body).find('form').submit();
+   });
+
+   {{ '{% if session_menu_access(\'' ~ route_name_prefix ~ '_edit\') %}' }}
+   // 弹出层按钮操作注册 - 编辑
+   PopupPage.registerBtnCallBack('编辑', function(iframeWin){
+	   PopupPage.closePopup();
+
+	   var url = "{{ '{{ path(\'' ~ route_name_prefix ~ '_edit\', { id: \'__popu_page_entity_id__\'}) }}' }}";
+	   url = url.replace(/__popu_page_entity_id__/, PopupPage.getParamByUrl('id'));
+	   PopupPage.open('编辑',url, ['保存', '删除', '关闭'], {'anim':false});
+   });
+   {{ '{% endif %}' }}
+
+   {{ '{% if session_menu_access(\'' ~ route_name_prefix ~ '_delete\') %}' }}
+   // 弹出层按钮操作注册 - 删除
+   PopupPage.registerBtnCallBack('删除', function(iframeWin){
+	   layer.confirm('确定要删除吗?', {}, function (_layer_index) {
+		   layer.close(_layer_index); // 关闭提示层
+		   var _loading_index = layer.load(1, {shade: [0.1, '#fff']}); // 加载动画
+		   $.post(
+				   "{{ '{{ path(\'' ~ route_name_prefix ~ '_delete\') }}' }}", {id: PopupPage.getParamByUrl('id') },
+				   function (result) {
+					   layer.close(_loading_index); // 关闭加载动画
+					   if (result.code == 1) {
+						   layer.msg(result.msg, {icon: 1,time: 2000}, function () {
+							   PopupPage.closePopup();
+							   window.location.reload()
+						   });
+					   } else {
+						   layer.msg(result.msg, {icon: 2,time: 2000});
+					   }
+				   }
+		   ).error(function () {
+			   layer.close(_loading_index); // 关闭加载动画
+			   layer.msg('服务异常', {icon: 2, time: 2000});
+		   });
+	   })
+   });
+   {{ '{% endif %}' }}
 </script>
 {{ '{% endblock %}' }}
 {% endblock body %}

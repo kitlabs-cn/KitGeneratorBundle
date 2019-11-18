@@ -84,24 +84,6 @@ class DoctrineFormGenerator extends Generator
         ));
     }
 
-    public function getEntityPrivateField(BundleInterface $bundle, $entity, $fields)
-    {
-        $privateFieldArr = [];
-
-        if (!class_exists($entity)) {
-            $entityClassCompName = $bundle->getNamespace().'\\Entity\\'.$entity;
-        } else {
-            $entityClassCompName = $entity;
-        }
-        foreach ($fields as $field) {
-            $_fun = 'set'.ucfirst($field['fieldName']);
-            if (class_exists($entityClassCompName) && !is_callable([$entityClassCompName, $_fun])) {
-                $privateFieldArr[] = $field['fieldName'];
-            }
-        }
-        return $privateFieldArr;
-    }
-
     /**
      * Returns an array of fields. Fields can be both column fields and
      * association fields.

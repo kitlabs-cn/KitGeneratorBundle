@@ -3,6 +3,7 @@
 namespace Kit\GeneratorBundle\Generator;
 
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 /**
  * Generator is the base class for all generators.
@@ -95,5 +96,23 @@ class Generator
         $relativePath = str_replace(getcwd(), '.', $absolutePath);
 
         return is_dir($absolutePath) ? rtrim($relativePath, '/').'/' : $relativePath;
+    }
+
+    protected function getEntityPrivateField(BundleInterface $bundle, $entity, $fields)
+    {
+        $privateFieldArr = [];
+
+        if (!class_exists($entity)) {
+            $entityClassCompName = $bundle->getNamespace().'\\Entity\\'.$entity;
+        } else {
+            $entityClassCompName = $entity;
+        }
+        foreach ($fields as $field) {
+            $_fun = 'set'.ucfirst($field['fieldName']);
+            if (class_exists($entityClassCompName) && !is_callable([$entityClassCompName, $_fun])) {
+                $privateFieldArr[] = $field['fieldName'];
+            }
+        }
+        return $privateFieldArr;
     }
 }

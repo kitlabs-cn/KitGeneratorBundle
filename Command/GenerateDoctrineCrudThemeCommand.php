@@ -131,8 +131,12 @@ EOT
 
         // form
          if ($withWrite) {
-             $this->generateForm($bundle, $entity, $metadata, $forceOverwrite);
-             $output->writeln('Generating the Form code: <info>OK</info>');
+             try {
+                 $this->generateForm($bundle, $entity, $metadata, $forceOverwrite);
+                 $output->writeln('Generating the Form code: <info>OK</info>');
+             } catch (\Exception $e) {
+                 echo PHP_EOL . 'generator formType faild!' . PHP_EOL . $e->getMessage() . PHP_EOL.PHP_EOL;
+             }
          }
 
         // routing
@@ -254,21 +258,7 @@ EOT
         try {
             $ret = $auto ? $this->addResourceEntity($routing, $bundle->getName(), $format, '/'.$prefix, 'routing/'.strtolower(str_replace('\\', '_', $entity)), $entity) : false;
         } catch (\RuntimeException $exc) {
-            $ret = false;
-        }
-
-        if (!$ret) {
-            $help = sprintf("        <comment>resource: \"@%s/Resources/config/routing/%s.%s\"</comment>\n", $bundle->getName(), strtolower(str_replace('\\', '_', $entity)), $format);
-            $help .= sprintf("        <comment>prefix:   /%s</comment>\n", $prefix);
-
-            return array(
-                '- Import the bundle\'s routing resource in the bundle routing file',
-                sprintf('  (%s).', $bundle->getPath().'/Resources/config/routing.yml'),
-                '',
-                sprintf('    <comment>%s:</comment>', $routing->getImportedResourceYamlKey($bundle->getName(), $prefix)),
-                $help,
-                '',
-            );
+            return [$exc->getMessage()];
         }
 
         // second, import the bundle's routing.yml file from the application's routing.yml file
@@ -321,14 +311,15 @@ EOT
     public function addResourceEntity($routing, $bundle, $format, $prefix = '/', $path = 'routing', $entity = '')
     {
         $current = '';
-        $code = sprintf("%s:\n", $routing->getImportedResourceYamlKey($bundle, $prefix));
+        $routeName = $routing->getImportedResourceYamlKey($bundle, $prefix);
+        $code = sprintf("%s:\n", $routeName);
 
         $getFileFun = function(){return $this->file;};
         $file = $getFileFun->call($routing);
         if (file_exists($file)) {
             $current = file_get_contents($file);
 
-            if ($entity && false !== strpos($current, strtolower($bundle).'_'.strtolower($entity).':')) {
+            if ($entity && false !== strpos($current, $routeName.':')) {
                 throw new \RuntimeException(sprintf('Entity "%s" is already imported.', $bundle));
             }
         } elseif (!is_dir($dir = dirname($file))) {
