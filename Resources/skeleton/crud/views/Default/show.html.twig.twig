@@ -17,13 +17,16 @@
                 <tr>
                 {%- endif %}
 
+                {% if metadata.type in ['text'] -%}
+                    {%- if _nowTd == 2 -%}</tr><tr>{% endif -%}
+                    {%- set _nowTd = 2 -%}
+                {% endif %}
+
                 <td class="td_head">{% if metadata.options.comment is defined %}{{ metadata.options.comment }}{% else %}{{ field|capitalize }}{% endif %}</td>
 
                 {% if metadata.type in ['text'] -%}
-                    {% if _nowTd == 2 %}</tr><tr>{% endif -%}
 
                     <td colspan="3">{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' }}' }}</td>
-                    {%- set _nowTd = 2 -%}
 
                 {% elseif metadata.type in ['datetime'] -%}
 
