@@ -14,6 +14,7 @@
     <table class="table informTable">
         {% set _nowTd = 0 -%}
         {% for field, metadata in fields -%}
+            {% if field not in ['createAt', 'updateAt'] %}
             {% if privateFieldArr is not empty and field not in privateFieldArr -%}
                 {% set _nowTd = _nowTd + 1 -%}
                 {% if _nowTd == 1 -%}
@@ -41,6 +42,7 @@
                     </tr>
                 {%- endif %}
             {%- endif -%}
+            {% endif %}
         {%- endfor -%}
 
         {%- if _nowTd == 1 %}
