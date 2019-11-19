@@ -23,7 +23,7 @@ class {{ form_class }} extends AbstractType
         $builder
             {%- for field in fields %}
             	{% if field.fieldName not in ['createAt', 'updateAt'] %}
-            	{% if privateFieldArr is not empty and field.fieldName not in privateFieldArr %}
+            	{% if privateFieldArr is empty or field.fieldName not in privateFieldArr %}
             	{% if field.options.comment is defined %}
 	->add('{{ field.fieldName }}', null, [
                 	'label' => '{{ field.options.comment }}'
