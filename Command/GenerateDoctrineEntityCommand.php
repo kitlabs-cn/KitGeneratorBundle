@@ -244,7 +244,7 @@ EOT
         $output->writeln(array(
             '',
             'Instead of starting with a blank entity, you can add some fields now.',
-            'Note that the primary key will be added automatically (named <comment>id</comment>).',
+            'Note that the primary key will be added automatically (named <comment>id,createAt,updateAt</comment>).',
             '',
         ));
         $output->write('<info>Available types:</info> ');

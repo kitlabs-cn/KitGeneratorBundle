@@ -63,6 +63,9 @@ class DoctrineEntityGenerator extends Generator
             $class->mapField($field);
         }
 
+        $class->mapField(array('fieldName' => 'createAt', 'type' => 'datetime', 'options' =>['comment' => '创建时间']));
+        $class->mapField(array('fieldName' => 'updateAt', 'type' => 'datetime', 'options' =>['comment' => '更新时间']));
+
         $entityGenerator = $this->getEntityGenerator();
         if ('annotation' === $format) {
             $entityGenerator->setGenerateAnnotations(true);
@@ -75,7 +78,35 @@ class DoctrineEntityGenerator extends Generator
                     'preUpdate',
                 ]
             ]);
+
             $entityCode = $entityGenerator->generateEntityClass($class);
+
+            $entityCode = str_replace([<<<EOF
+    public function prePersist()
+    {
+        // Add your code here
+    }
+EOF,<<<EOF
+    public function preUpdate()
+    {
+        // Add your code here
+    }
+EOF
+], [<<<EOF
+    public function prePersist()
+    {
+        if(\$this->getCreateAt() == null){
+            \$this->setCreateAt(new \\DateTime());
+        }
+        \$this->setUpdateAt(new \\DateTime());
+    }
+EOF,<<<EOF
+    public function preUpdate()
+    {
+        \$this->setUpdateAt(new \\DateTime());
+    }
+EOF], $entityCode);
+
             $mappingPath = $mappingCode = false;
         } else {
             $cme = new ClassMetadataExporter();
