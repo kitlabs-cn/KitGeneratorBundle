@@ -357,17 +357,23 @@ EOT
                 break;
             }
 
-            $defaultType = 'string';
-
             // try to guess the type by the column name prefix/suffix
-            if (substr($columnName, -3) == '_at') {
+            if (0 === strcasecmp(substr($columnName, -2), 'at')
+                || 0 === strcasecmp(substr($columnName, -4), 'time')
+            ) {
                 $defaultType = 'datetime';
-            } elseif (substr($columnName, -3) == '_id') {
+            } elseif (0 === strcasecmp(substr($columnName, -2), 'id')) {
                 $defaultType = 'integer';
-            } elseif (substr($columnName, 0, 3) == 'is_') {
+            } elseif (0 === strcasecmp(substr($columnName, 0,2), 'is')
+                || 0 === strcasecmp(substr($columnName, 0, 3), 'has')
+            ) {
                 $defaultType = 'boolean';
-            } elseif (substr($columnName, 0, 4) == 'has_') {
-                $defaultType = 'boolean';
+            } elseif (0 === strcasecmp(substr($columnName, -6), 'status')
+                || 0 === strcasecmp(substr($columnName, -4), 'type')
+            ) {
+                $defaultType = 'smallint';
+            } else {
+                $defaultType = 'string';
             }
 
             $question = new Question($questionHelper->getQuestion('Field type', $defaultType), $defaultType);
