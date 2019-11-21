@@ -86,7 +86,8 @@ class DoctrineEntityGenerator extends Generator
     {
         // Add your code here
     }
-EOF,<<<EOF
+EOF
+                ,<<<EOF
     public function preUpdate()
     {
         // Add your code here
@@ -100,12 +101,14 @@ EOF
         }
         \$this->setUpdateAt(new \\DateTime());
     }
-EOF,<<<EOF
+EOF
+                ,<<<EOF
     public function preUpdate()
     {
         \$this->setUpdateAt(new \\DateTime());
     }
-EOF], $entityCode);
+EOF
+            ], $entityCode);
 
             $mappingPath = $mappingCode = false;
         } else {
