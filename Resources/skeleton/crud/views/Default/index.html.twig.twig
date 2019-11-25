@@ -36,6 +36,7 @@
 							{%- endif -%}
 						</th>
 					{% endfor -%}
+					<th class="last-child">操作</th>
 				</tr>
 				{{'{% if pagination is defined and pagination is not empty %}' }}
 				{{ '{% for item in pagination %}' }}
@@ -57,11 +58,27 @@
 							{%- endif -%}
 						</td>
 					{% endfor -%}
+					<td class="operation_btn">
+						<div class="relative">
+							<a class="text-yellow hover_span">...</a>
+							<ul class="operate_complete">
+								<li><a class="text-blue" href="javascript:void(0)" onclick="PopupPage.open('{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}详情','{{ '{{ path(\'' ~ route_name_prefix ~'_show\', { \'id\': item.id }) }}' }}',['关闭'])">查看</a></li>
+
+								{{ '{% if session_menu_access(\'' ~ route_name_prefix ~ '_edit\') %}' }}
+								<li><a class="text-yellow" href="javascript:void(0)" onclick="PopupPage.open('{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}编辑','{{ '{{ path(\'' ~ route_name_prefix ~'_edit\', { \'id\': item.id }) }}' }}',['保存', '关闭'])">编辑</a></li>
+								{{ '{% endif %}' }}
+
+								{{ '{% if session_menu_access(\'' ~ route_name_prefix ~ '_delete\') %}' }}
+								<li><a class="text-red" href="javascript:void(0)" onclick="delItem({{ '{{' }} item.id {{ '}}' }})">删除</a></li>
+								{{ '{% endif %}' }}
+							</ul>
+						</div>
+					</td>
 				</tr>
 				{{ '{% endfor %}' }}
 				{{ '{% else %}' }}
 					{% set num = (fields|length) -%}
-					{{ '{{ macro_no_content('~ num ~') }}' }}
+					{{ '{{ macro_no_content('~ (num+1) ~') }}' }}
 				{{ '{% endif %}' }}
 			</table>
 			{{ '{{ knp_pagination_render(pagination,\'pagination.html.twig\') }}' }}
@@ -90,29 +107,38 @@
    {{ '{% if session_menu_access(\'' ~ route_name_prefix ~ '_delete\') %}' }}
    // 弹出层按钮操作注册 - 删除
    PopupPage.registerBtnCallBack('删除', function(iframeWin){
-	   layer.confirm('确定要删除吗?', {}, function (_layer_index) {
-		   layer.close(_layer_index); // 关闭提示层
-		   var _loading_index = layer.load(1, {shade: [0.1, '#fff']}); // 加载动画
-		   $.post(
-				   "{{ '{{ path(\'' ~ route_name_prefix ~ '_delete\') }}' }}", {id: PopupPage.getParamByUrl('id') },
-				   function (result) {
-					   layer.close(_loading_index); // 关闭加载动画
-					   if (result.code == 1) {
-						   layer.msg(result.msg, {icon: 1,time: 2000}, function () {
-							   PopupPage.closePopup();
-							   window.location.reload()
-						   });
-					   } else {
-						   layer.msg(result.msg, {icon: 2,time: 2000});
-					   }
-				   }
-		   ).error(function () {
-			   layer.close(_loading_index); // 关闭加载动画
-			   layer.msg('服务异常', {icon: 2, time: 2000});
-		   });
-	   })
+	   delItem(PopupPage.getParamByUrl('id'));
    });
    {{ '{% endif %}' }}
+
+   /**
+	* 删除单个实体
+	*/
+	function delItem($id)
+	{
+		layer.confirm('确定要删除吗?', {}, function (_layer_index) {
+			layer.close(_layer_index); // 关闭提示层
+			var _loading_index = layer.load(1, {shade: [0.1, '#fff']}); // 加载动画
+
+			$.post(
+					"{{ '{{ path(\'' ~ route_name_prefix ~ '_delete\') }}' }}", {id: $id },
+					function (result) {
+						layer.close(_loading_index); // 关闭加载动画
+						if (result.code == 1) {
+							layer.msg(result.msg, {icon: 1,time: 2000}, function () {
+								PopupPage.closePopup();
+								window.location.reload()
+							});
+						} else {
+							layer.msg(result.msg, {icon: 2,time: 2000});
+						}
+					}
+			).error(function () {
+				layer.close(_loading_index); // 关闭加载动画
+				layer.msg('服务异常', {icon: 2, time: 2000});
+			});
+		})
+	}
 </script>
 {{ '{% endblock %}' }}
 {% endblock body %}
