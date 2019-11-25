@@ -82,6 +82,11 @@ class Generator
         return file_put_contents($filename, $content);
     }
 
+    public static function dumpError($fileName, $reason)
+    {
+        self::writeln(sprintf('  <fg=red>failure</> \'%s\' [%s]', self::relativizePath($fileName), $reason));
+    }
+
     private static function writeln($message)
     {
         if (null === self::$output) {

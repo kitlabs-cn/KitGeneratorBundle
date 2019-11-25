@@ -85,18 +85,18 @@ class DoctrineCrudThemeGenerator extends Generator
             self::mkdir($dir);
         }
 
-        $this->generateIndexView($dir, $theme);
+        $this->generateIndexView($dir, $theme, $forceOverwrite);
 
         if (in_array('show', $this->actions)) {
-            $this->generateShowView($dir, $theme);
+            $this->generateShowView($dir, $theme, $forceOverwrite);
         }
 
         if (in_array('new', $this->actions)) {
-            $this->generateNewView($dir, $theme);
+            $this->generateNewView($dir, $theme, $forceOverwrite);
         }
 
         if (in_array('edit', $this->actions)) {
-            $this->generateEditView($dir, $theme);
+            $this->generateEditView($dir, $theme, $forceOverwrite);
         }
 
         // test
@@ -222,9 +222,16 @@ class DoctrineCrudThemeGenerator extends Generator
      * Generates the index.html.twig template in the final bundle.
      *
      * @param string $dir The path to the folder that hosts templates in the bundle
+     * @param string $theme
+     * @param boolean $forceOverwrite
      */
-    protected function generateIndexView($dir, $theme)
+    protected function generateIndexView($dir, $theme, $forceOverwrite)
     {
+        if (!$forceOverwrite && is_file($dir.'/index.html.twig')) {
+            self::dumpError($dir.'/index.html.twig', 'because is existing');
+            return ;
+        }
+
         $this->renderFile('crud/views/'.$theme.'/index.html.twig.twig', $dir.'/index.html.twig', array(
             'bundle' => $this->bundle->getName(),
             'entity' => $this->entity,
@@ -244,9 +251,16 @@ class DoctrineCrudThemeGenerator extends Generator
      * Generates the show.html.twig template in the final bundle.
      *
      * @param string $dir The path to the folder that hosts templates in the bundle
+     * @param string $theme
+     * @param boolean $forceOverwrite
      */
-    protected function generateShowView($dir, $theme)
+    protected function generateShowView($dir, $theme, $forceOverwrite)
     {
+        if (!$forceOverwrite && is_file($dir.'/show.html.twig')) {
+            self::dumpError($dir.'/show.html.twig', 'because is existing');
+            return ;
+        }
+
         $this->renderFile('crud/views/'.$theme.'/show.html.twig.twig', $dir.'/show.html.twig', array(
             'bundle' => $this->bundle->getName(),
             'entity' => $this->entity,
@@ -264,9 +278,16 @@ class DoctrineCrudThemeGenerator extends Generator
      * Generates the new.html.twig template in the final bundle.
      *
      * @param string $dir The path to the folder that hosts templates in the bundle
+     * @param string $theme
+     * @param boolean $forceOverwrite
      */
-    protected function generateNewView($dir, $theme)
+    protected function generateNewView($dir, $theme, $forceOverwrite)
     {
+        if (!$forceOverwrite && is_file($dir.'/new.html.twig')) {
+            self::dumpError($dir.'/new.html.twig', 'because is existing');
+            return ;
+        }
+
         $privateFieldArr = $this->getEntityPrivateField($this->bundle, $this->entity, $this->metadata->fieldMappings);
 
         $this->renderFile('crud/views/'.$theme.'/new.html.twig.twig', $dir.'/new.html.twig', array(
@@ -286,9 +307,16 @@ class DoctrineCrudThemeGenerator extends Generator
      * Generates the edit.html.twig template in the final bundle.
      *
      * @param string $dir The path to the folder that hosts templates in the bundle
+     * @param string $theme
+     * @param boolean $forceOverwrite
      */
-    protected function generateEditView($dir, $theme)
+    protected function generateEditView($dir, $theme, $forceOverwrite)
     {
+        if (!$forceOverwrite && is_file($dir.'/edit.html.twig')) {
+            self::dumpError($dir.'/edit.html.twig', 'because is existing');
+            return ;
+        }
+
         $privateFieldArr = $this->getEntityPrivateField($this->bundle, $this->entity, $this->metadata->fieldMappings);
 
         $this->renderFile('crud/views/'.$theme.'/edit.html.twig.twig', $dir.'/edit.html.twig', array(
