@@ -90,7 +90,7 @@
 
    // 弹出层按钮操作注册 - 保存
    PopupPage.registerBtnCallBack('保存', function(iframeWin){
-	   $(iframeWin.document.body).find('form').submit();
+	   $(iframeWin.document.body).find('#form_btn_submit').click();
    });
 
    {{ '{% if session_menu_access(\'' ~ route_name_prefix ~ '_edit\') %}' }}
