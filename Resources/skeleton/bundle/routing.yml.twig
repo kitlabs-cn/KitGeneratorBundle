@@ -1,3 +1,13 @@
 {{ extension_alias }}_homepage:
     path:     /
     defaults: { _controller: {{ bundle }}:Default:index }
+    options:
+        menu:
+            name: "管理" # 路由中文名称
+            icon: "images/icon/xxx.png" #路由小图标，无则留空
+            node: 1 #路由节点
+            status: 1 #路由状态，1启用，0禁用
+            is_show: 1 #是否显示，1显示，0不显示
+            is_authorize: 1 #是否需要授权访问，1授权才能访问，0无须授权（即不需要配置该路由就能进行访问）
+            level: 1 #路由级别
+            parent_route: 'admin_homepage' #上一级路由名称

@@ -13,6 +13,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Sensio\Bundle\GeneratorBundle\Generator\BundleGenerator;
 use Sensio\Bundle\GeneratorBundle\Manipulator\KernelManipulator;
 use Sensio\Bundle\GeneratorBundle\Manipulator\RoutingManipulator;
+use Sensio\Bundle\GeneratorBundle\Command\Validators;
 
 /**
  * Generates bundles.
