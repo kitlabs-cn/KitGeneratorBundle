@@ -100,7 +100,7 @@ class EntityGenerator extends BaseEntityGenerator
             }
             
             /**
-             * add Asset NotBlank & Length
+             * add Assert NotBlank & Length
              * */
             $comment = isset($fieldMapping['options']) && isset($fieldMapping['options']['comment']) ? $fieldMapping['options']['comment'] : (isset($fieldMapping['columnName']) ? $fieldMapping['columnName'] : '');
             if(!isset($fieldMapping['nullable']) ||(isset($fieldMapping['nullable']) && $fieldMapping['nullable'] == false)){
