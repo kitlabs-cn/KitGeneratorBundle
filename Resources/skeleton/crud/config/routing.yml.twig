@@ -9,7 +9,7 @@
             is_show: 1 #是否显示，1显示，0不显示
             is_authorize: 1 #是否需要授权访问，1授权才能访问，0无须授权（即不需要配置该路由就能进行访问）
             level: 2 #路由级别
-            parent_route: {{ extension_alias }}_homepage #上一级路由名称
+            parent_route: {{ bundle|slice(0, -6)|lower }}_homepage #上一级路由名称
 
 {% if 'index' in actions %}
 {{ route_name_prefix }}_index:
@@ -32,7 +32,7 @@
     defaults: { _controller: "{{ bundle }}:{{ entity }}:show" }
     options:
         menu:
-            name: "{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}列表" # 路由中文名称
+            name: "{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}查看" # 路由中文名称
             icon: "" #路由小图标，无则留空
             status: 1 #路由状态，1启用，0禁用
             is_show: 1 #是否显示，1显示，0不显示

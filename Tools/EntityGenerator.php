@@ -98,6 +98,17 @@ class EntityGenerator extends BaseEntityGenerator
             if (isset($fieldMapping['version']) && $fieldMapping['version']) {
                 $lines[] = $this->spaces . ' * @' . $this->annotationsPrefix . 'Version';
             }
+            
+            /**
+             * add Asset NotBlank & Length
+             * */
+            $comment = isset($fieldMapping['options']) && isset($fieldMapping['options']['comment']) ? $fieldMapping['options']['comment'] : (isset($fieldMapping['columnName']) ? $fieldMapping['columnName'] : '');
+            if(!isset($fieldMapping['nullable']) ||(isset($fieldMapping['nullable']) && $fieldMapping['nullable'] == false)){
+                $lines[] = $this->spaces . ' * @Assert\NotBlank(message="' . $comment . '不能为空")';
+            }
+            if (isset($fieldMapping['type']) && $fieldMapping['type'] == 'string' && isset($fieldMapping['length'])) {
+                $lines[] = $this->spaces . ' * @Assert\Length(max=' . $fieldMapping['length'] . ', maxMessage="'. $comment . '长度最大为:' .$fieldMapping['length'].'")';
+            }
         }
         
         $lines[] = $this->spaces . ' */';
@@ -133,14 +144,14 @@ class EntityGenerator extends BaseEntityGenerator
         $this->staticReflection[$metadata->name]['methods'][] = $methodName;
         
         $methodBodys = [
-            'prePersist' => '        if($this->getCreateAt() == null){
-            $this->setCreateAt(new \DateTime());
-            $this->setCreateTime(date(\'Y-m-d H:i:s\'));
-        }
-        $this->setUpdateAt(new \DateTime());
-        $this->setUpdateTime(date(\'Y-m-d H:i:s\'));',
-            'preUpdate' => '        $this->setUpdateAt(new \DateTime());
-        $this->setUpdateTime(date(\'Y-m-d H:i:s\'));',
+            'prePersist' => '    if($this->getCreateAt() == null){
+        $this->setCreateAt(new \DateTime());
+        $this->setCreateTime(date(\'Y-m-d H:i:s\'));
+    }
+    $this->setUpdateAt(new \DateTime());
+    $this->setUpdateTime(date(\'Y-m-d H:i:s\'));',
+            'preUpdate' => '    $this->setUpdateAt(new \DateTime());
+    $this->setUpdateTime(date(\'Y-m-d H:i:s\'));',
         ];
         $replacements = [
             '<name>'        => $this->annotationsPrefix . ucfirst($name),
