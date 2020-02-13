@@ -21,7 +21,7 @@
          */
         $repo = $this->getDoctrine()->getRepository('{{ bundle }}:{{ entity }}');
         $pagesize = 15;
-        $paginator = $this->get('knp_paginator');
+        $paginator = $this->get('base.paginator_cache_service');
         $pagination = $paginator->paginate($repo->getPageQuery(), $request->query->getInt('page', 1), $pagesize);
 {% endblock method_body %}
 

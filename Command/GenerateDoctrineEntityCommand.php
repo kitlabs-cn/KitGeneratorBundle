@@ -244,7 +244,7 @@ EOT
         $output->writeln(array(
             '',
             'Instead of starting with a blank entity, you can add some fields now.',
-            'Note that the primary key will be added automatically (named <comment>id</comment>).',
+            'Note that the primary key will be added automatically (named <comment>id,createAt,updateAt,createTime,updateTime</comment>).',
             '',
         ));
         $output->write('<info>Available types:</info> ');
@@ -368,6 +368,8 @@ EOT
                 $defaultType = 'boolean';
             } elseif (substr($columnName, 0, 4) == 'has_') {
                 $defaultType = 'boolean';
+            }elseif (substr($columnName, -5) == '_type' || $columnName == 'status'){
+                 $defaultType = 'smallint';
             }
 
             $question = new Question($questionHelper->getQuestion('Field type', $defaultType), $defaultType);

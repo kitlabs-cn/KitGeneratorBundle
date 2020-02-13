@@ -3,7 +3,7 @@
     defaults: { _controller: "{{ bundle }}:{{ entity }}:index" }
     options:
         menu:
-            name: "{{ route_name_prefix }}列表" # 路由中文名称
+            name: "{{ route_name_prefix }}管理" # 路由中文名称
             icon: "" #路由小图标，无则留空
             status: 1 #路由状态，1启用，0禁用
             is_show: 1 #是否显示，1显示，0不显示
@@ -17,7 +17,7 @@
     defaults: { _controller: "{{ bundle }}:{{ entity }}:index" }
     options:
         menu:
-            name: "{{ route_name_prefix }}列表" # 路由中文名称
+            name: "{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}列表" # 路由中文名称
             icon: "" #路由小图标，无则留空
             status: 1 #路由状态，1启用，0禁用
             is_show: 1 #是否显示，1显示，0不显示
@@ -32,7 +32,7 @@
     defaults: { _controller: "{{ bundle }}:{{ entity }}:show" }
     options:
         menu:
-            name: "{{ route_name_prefix }}列表" # 路由中文名称
+            name: "{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}列表" # 路由中文名称
             icon: "" #路由小图标，无则留空
             status: 1 #路由状态，1启用，0禁用
             is_show: 1 #是否显示，1显示，0不显示
@@ -47,7 +47,7 @@
     defaults: { _controller: "{{ bundle }}:{{ entity }}:new" }
     options:
         menu:
-            name: "{{ route_name_prefix }}新增" # 路由中文名称
+            name: "{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}新增" # 路由中文名称
             icon: "" #路由小图标，无则留空
             status: 1 #路由状态，1启用，0禁用
             is_show: 1 #是否显示，1显示，0不显示
@@ -62,7 +62,7 @@
     defaults: { _controller: "{{ bundle }}:{{ entity }}:edit" }
     options:
         menu:
-            name: "{{ route_name_prefix }}编辑" # 路由中文名称
+            name: "{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}编辑" # 路由中文名称
             icon: "" #路由小图标，无则留空
             status: 1 #路由状态，1启用，0禁用
             is_show: 1 #是否显示，1显示，0不显示
@@ -77,7 +77,7 @@
     defaults: { _controller: "{{ bundle }}:{{ entity }}:delete" }
     options:
         menu:
-            name: "{{ route_name_prefix }}删除" # 路由中文名称
+            name: "{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}删除" # 路由中文名称
             icon: "" #路由小图标，无则留空
             status: 1 #路由状态，1启用，0禁用
             is_show: 1 #是否显示，1显示，0不显示

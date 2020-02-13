@@ -22,7 +22,7 @@ class {{ form_class }} extends AbstractType
     {
         $builder
             {%- for field in fields %}
-            	{% if field.fieldName not in ['createAt', 'updateAt'] %}
+            	{% if field.fieldName not in ['createAt', 'updateAt', 'createTime', 'updateTime'] %}
             	{% if field.options.comment is defined %}
 	->add('{{ field.fieldName }}', null, [
                 	'label' => '{{ field.options.comment }}'

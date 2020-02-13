@@ -105,4 +105,62 @@ class EntityGenerator extends BaseEntityGenerator
         return implode("\n", $lines);
     }
     
+    /**
+     * @return string
+     */
+    protected function generateEntityUse()
+    {
+        if (! $this->generateAnnotations) {
+            return '';
+        }
+        
+        return "\n".'use Doctrine\ORM\Mapping as ORM;'."\n".'use Symfony\Component\Validator\Constraints as Assert;'."\n";
+    }
+    
+    /**
+     * @param string            $name
+     * @param string            $methodName
+     * @param ClassMetadataInfo $metadata
+     *
+     * @return string
+     */
+    protected function generateLifecycleCallbackMethod($name, $methodName, ClassMetadataInfo $metadata)
+    {
+        if ($this->hasMethod($methodName, $metadata)) {
+            return '';
+        }
+        
+        $this->staticReflection[$metadata->name]['methods'][] = $methodName;
+        
+        $methodBodys = [
+            'prePersist' => '        if($this->getCreateAt() == null){
+            $this->setCreateAt(new \DateTime());
+            $this->setCreateTime(date(\'Y-m-d H:i:s\'));
+        }
+        $this->setUpdateAt(new \DateTime());
+        $this->setUpdateTime(date(\'Y-m-d H:i:s\'));',
+            'preUpdate' => '        $this->setUpdateAt(new \DateTime());
+        $this->setUpdateTime(date(\'Y-m-d H:i:s\'));',
+        ];
+        $replacements = [
+            '<name>'        => $this->annotationsPrefix . ucfirst($name),
+            '<methodName>'  => $methodName,
+            '<methodBody>'  => isset($methodBodys[$methodName]) ? $methodBodys[$methodName] : '',
+        ];
+        $lifecycleCallbackMethodTemplate = '/**
+ * @<name>
+ */
+public function <methodName>()
+{
+<spaces>// Add your code here
+<methodBody>
+}';
+        $method = str_replace(
+            array_keys($replacements),
+            array_values($replacements),
+            $lifecycleCallbackMethodTemplate
+            );
+        
+        return $this->prefixCodeWithSpaces($method);
+    }
 }

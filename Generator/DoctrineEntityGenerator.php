@@ -63,6 +63,14 @@ class DoctrineEntityGenerator extends Generator
             $class->mapField($field);
         }
 
+        $class->mapField(array('fieldName' => 'createAt', 'type' => 'datetime', 'options' =>['comment' => '创建时间']));
+        $class->mapField(array('fieldName' => 'updateAt', 'type' => 'datetime', 'options' =>['comment' => '更新时间']));
+        $class->mapField(array('fieldName' => 'createTime', 'type' => 'string', 'length' => 19, 'options' =>['comment' => '创建时间,字符串,YYYY-MM-DD HH:ii:ss']));
+        $class->mapField(array('fieldName' => 'updateTime', 'type' => 'string', 'length' => 19, 'options' =>['comment' => '更新时间,字符串,YYYY-MM-DD HH:ii:ss']));
+        /**
+         * @todo 处理生命周期方法
+         * @var \Kit\GeneratorBundle\Tools\EntityGenerator $entityGenerator
+         */
         $entityGenerator = $this->getEntityGenerator();
         if ('annotation' === $format) {
             $entityGenerator->setGenerateAnnotations(true);

@@ -2,6 +2,7 @@
 
 namespace Kit\GeneratorBundle\Command;
 
+use Kit\GeneratorBundle\Command\GenerateDoctrineCommand;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,7 +16,6 @@ use Sensio\Bundle\GeneratorBundle\Command\Helper\QuestionHelper;
 use Kit\GeneratorBundle\Generator\DoctrineCrudGenerator;
 use Kit\GeneratorBundle\Generator\DoctrineFormGenerator;
 use Sensio\Bundle\GeneratorBundle\Manipulator\RoutingManipulator;
-use Kit\GeneratorBundle\Command\GenerateDoctrineCommand;
 use Sensio\Bundle\GeneratorBundle\Command\Validators;
 
 /**
