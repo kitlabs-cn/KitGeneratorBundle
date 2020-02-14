@@ -102,12 +102,14 @@ class EntityGenerator extends BaseEntityGenerator
             /**
              * add Assert NotBlank & Length
              * */
-            $comment = isset($fieldMapping['options']) && isset($fieldMapping['options']['comment']) ? $fieldMapping['options']['comment'] : (isset($fieldMapping['columnName']) ? $fieldMapping['columnName'] : '');
-            if(!isset($fieldMapping['nullable']) ||(isset($fieldMapping['nullable']) && $fieldMapping['nullable'] == false)){
-                $lines[] = $this->spaces . ' * @Assert\NotBlank(message="' . $comment . '不能为空")';
-            }
-            if (isset($fieldMapping['type']) && $fieldMapping['type'] == 'string' && isset($fieldMapping['length'])) {
-                $lines[] = $this->spaces . ' * @Assert\Length(max=' . $fieldMapping['length'] . ', maxMessage="'. $comment . '长度最大为:' .$fieldMapping['length'].'")';
+            if(isset($fieldMapping['columnName']) && $fieldMapping['columnName'] != 'id'){
+                $comment = isset($fieldMapping['options']) && isset($fieldMapping['options']['comment']) ? $fieldMapping['options']['comment'] : (isset($fieldMapping['columnName']) ? $fieldMapping['columnName'] : '');
+                if(!isset($fieldMapping['nullable']) ||(isset($fieldMapping['nullable']) && $fieldMapping['nullable'] == false)){
+                    $lines[] = $this->spaces . ' * @Assert\NotBlank(message="' . $comment . '不能为空")';
+                }
+                if (isset($fieldMapping['type']) && $fieldMapping['type'] == 'string' && isset($fieldMapping['length'])) {
+                    $lines[] = $this->spaces . ' * @Assert\Length(max=' . $fieldMapping['length'] . ', maxMessage="'. $comment . '长度最大为:' .$fieldMapping['length'].'")';
+                }
             }
         }
         
