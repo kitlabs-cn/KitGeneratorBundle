@@ -1,49 +1,72 @@
 {% block extends %}
-{{ "{% extends 'layout.html.twig' %}" }}
+    {{ "{% extends 'layout.html.twig' %}" }}
 {% endblock extends %}
 
 {% block body %}
+{{ "{% block css %}" }}
+<link rel="stylesheet" href="{{ '{{' }} asset('css/inform_table.css?v=1024'|theme) {{ '}}' }}">
+<link rel="stylesheet" href="{{ '{{' }} asset('css/popup_page.css?v=1024'|theme) {{ '}}' }}">
+{{ "{% endblock %}" }}
 {{ "{% block body %}" }}
-	<blockquote>
-    	<strong>{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_singularized|capitalize }}{% endif %}</strong>
-    </blockquote>
-    <table class="table table-responsive">
-        <tbody>
-        {%- for field, metadata in fields %}
-            <tr>
-                <td>{% if metadata.options.comment is defined %}{{ metadata.options.comment }}{% else %}{{ field|capitalize }}{% endif %}</td>
+    <div class="informCon">
+        <table class="table informTable">
+            {% set _nowTd = 0 -%}
+            {% for field, metadata in fields -%}
+                {%- set _nowTd = _nowTd + 1 -%}
+                {%- if _nowTd == 1 -%}
+                <tr>
+                {%- endif %}
 
-            {%- if metadata.type in ['datetime'] %}
+                {% if metadata.type in ['text'] -%}
+                    {%- if _nowTd == 2 -%}</tr><tr>{% endif -%}
+                    {%- set _nowTd = 2 -%}
+                {% endif %}
+
+                <td class="td_head">{% if metadata.options.comment is defined %}{{ metadata.options.comment }}{% else %}{{ field|capitalize }}{% endif %}</td>
+
+                {% if metadata.type in ['text'] -%}
+
+                    <td colspan="3">{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' }}' }}</td>
+
+                {% elseif metadata.type in ['datetime'] -%}
 
                 <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d H:i:s\') }}{% endif %}' }}</td>
 
-            {%- elseif metadata.type in ['date'] %}
+                {% elseif metadata.type in ['date'] -%}
 
                 <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d\') }}{% endif %}' }}</td>
 
-            {%- elseif metadata.type in ['time'] %}
+                {% elseif metadata.type in ['time'] -%}
 
                 <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'H:i:s\') }}{% endif %}' }}</td>
 
-            {%- elseif metadata.type in ['array'] %}
+                {% elseif metadata.type in ['array'] -%}
 
                 <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|join(\', \') }}{% endif %}' }}</td>
 
-            {%- elseif metadata.type in ['boolean'] %}
+                {% elseif metadata.type in ['boolean'] -%}
 
                 <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}Yes{% else %}No{% endif %}' }}</td>
 
-            {%- else %}
+                {% else -%}
 
                 <td>{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' }}' }}</td>
 
-            {%- endif %}
+                {% endif -%}
 
-            </tr>
+                {% if _nowTd == 2 -%}
+                </tr>
+                {% endif -%}
 
-        {%- endfor %}
+                {%- if _nowTd >= 2 %}
+                    {%- set _nowTd = 0 -%}
+                {%- endif %}
+            {% endfor %}
 
-        </tbody>
-    </table>
+            {% if _nowTd == 1 -%}
+                </tr>
+            {% endif %}
+        </table>
+    </div>
 {{ "{% endblock %}" }}
 {% endblock body %}

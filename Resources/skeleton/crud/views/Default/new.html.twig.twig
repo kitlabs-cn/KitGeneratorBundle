@@ -4,19 +4,56 @@
 
 {% block body %}
 {{ "{% block css %}" }}
+<link rel="stylesheet" href="{{ '{{ asset(\'css/inform_table.css?v=1024\'|theme) }}' }}">
+<link rel="stylesheet" href="{{ '{{ asset(\'css/popup_page.css?v=1024\'|theme) }}' }}">
 {{ "{% endblock %}" }}
-{{ "{% block content %}" }}
-	<div class="line">
-        <div class="x10">
-        {{ '{% for error in errors %}' }}
-        <div class="alert alert-yellow">
-            <span class="close rotate-hover"></span><strong>提示：</strong>{{ '{{ error }}' }}
-        </div>
-        {{ '{% endfor %}' }}
-            {{  "{{ form(form, {'attr': {'novalidate': 'novalidate', 'class': 'form-x', 'id': 'form'}}) }}" }}
-        </div>
+{{ "{% block body %}" }}
+{{ '{{ form_errors_tips(errors)|raw }}' }}
+<div class="informCon">
+    {{  "{{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'form-x', 'id': 'form'}}) }}" }}
+    <table class="table informTable">
+        {% set _nowTd = 0 -%}
+        {% for field, metadata in fields -%}
+            {% if field not in ['createAt', 'updateAt'] %}
+            {% if privateFieldArr is not empty and field not in privateFieldArr -%}
+                {% set _nowTd = _nowTd + 1 -%}
+                {% if _nowTd == 1 -%}
+                    <tr>
+                {% endif -%}
+
+                {% if metadata.type in ['text'] -%}
+
+                    {%- if _nowTd == 2 -%}
+                        </tr>
+                        <tr>
+                    {%- endif -%}
+                    <td class="td_head">{{ '{{ form_label(form.' ~ field ~ ') }}' }}</td>
+                    <td colspan="3">{{ '{{ form_widget(form.' ~ field ~ ') }}' }}</td>
+                    {%- set _nowTd = 2 -%}
+
+                {% else -%}
+                    <td class="td_head">{{ '{{ form_label(form.' ~ field ~ ') }}' }}</td>
+                    <td>{{ '{{ form_widget(form.' ~ field ~ ') }}' }}</td>
+
+                {%- endif %}
+
+                {% if _nowTd >= 2 -%}
+                    {% set _nowTd = 0 -%}
+                    </tr>
+                {%- endif %}
+            {%- endif -%}
+            {% endif %}
+        {%- endfor -%}
+
+        {%- if _nowTd == 1 %}
+            </tr>
+        {% endif %}
+    </table>
+    <div class="form_btn_group">
+        <button id="form_btn_submit" class="button hidden" type="submit">提交</button>
+        <button id="form_btn_reset" class="button hidden" type="reset">重置</button>
     </div>
-{{ "{% endblock %}" }}
-{{ "{% block js %}" }}
+    {{  "{{ form_end(form) }}" }}
+</div>
 {{ "{% endblock %}" }}
 {% endblock body %}
