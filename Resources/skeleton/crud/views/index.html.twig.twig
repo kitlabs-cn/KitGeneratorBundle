@@ -21,7 +21,7 @@
 				{%- endfor %}
 
 			], [
-				{{ 'session_menu_access(\'' ~ route_name_prefix ~ '_new\')' }} ? '<a class="button notice_add" href="{{ '~ path(\'' ~ route_name_prefix ~'_new\') ~ ' }}"><span class="icon-plus"></span>新增</a>' : '',
+				{{ 'session_menu_access(\'' ~ route_name_prefix ~ '_new\')' }} ? '<a class="button notice_add" href="{{ '\'~ path(\'' ~ route_name_prefix ~'_new\') ~ \'' }}"><span class="icon-plus"></span>新增</a>' : '',
 			])
 		{{ '}}' }}
 		<div class="list_box">
