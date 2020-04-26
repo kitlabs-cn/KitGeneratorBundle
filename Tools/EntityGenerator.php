@@ -102,7 +102,7 @@ class EntityGenerator extends BaseEntityGenerator
             /**
              * add Assert NotBlank & Length
              * */
-            if(isset($fieldMapping['columnName']) && ($fieldMapping['columnName'] != 'id' || $fieldMapping['columnName'] != 'create_at' || $fieldMapping['columnName'] != 'update_at' || $fieldMapping['columnName'] != 'create_time' || $fieldMapping['columnName'] != 'update_time')){
+            if(isset($fieldMapping['columnName']) && $fieldMapping['columnName'] != 'id' && $fieldMapping['columnName'] != 'create_at' && $fieldMapping['columnName'] != 'update_at' && $fieldMapping['columnName'] != 'create_time' && $fieldMapping['columnName'] != 'update_time'){
                 $comment = isset($fieldMapping['options']) && isset($fieldMapping['options']['comment']) ? $fieldMapping['options']['comment'] : (isset($fieldMapping['columnName']) ? $fieldMapping['columnName'] : '');
                 if(!isset($fieldMapping['nullable']) ||(isset($fieldMapping['nullable']) && $fieldMapping['nullable'] == false)){
                     $lines[] = $this->spaces . ' * @Assert\NotBlank(message="' . $comment . '不能为空")';
