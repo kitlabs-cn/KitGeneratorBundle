@@ -1,59 +1,71 @@
 {% block extends %}
-{{ "{% extends 'layout.html.twig' %}" }}
+{{ "{% extends 'base.html.twig' %}" }}
 {% endblock extends %}
 
 {% block body %}
 {{ "{% block css %}" }}
-<link rel="stylesheet" href="{{ '{{ asset(\'css/inform_table.css?v=1024\'|theme) }}' }}">
-<link rel="stylesheet" href="{{ '{{ asset(\'css/popup_page.css?v=1024\'|theme) }}' }}">
+    <link rel="stylesheet" type="text/css" href="{{ '{{ asset(\'css/d_m_send_out_document.css?v=1024\'|theme) }}' }}" />
+    <link rel="stylesheet" type="text/css" href="{{ '{{ asset(\'css/table_document.css?v=1024\'|theme) }}' }}" />
+    <link rel="stylesheet" type="text/css" href="{{ '{{ asset(\'css/assets_collar_list.css?v=1024\'|theme) }}' }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ '{{ asset(\'css/conferent_new.css?v=1024\'|theme) }}' }}" />
 {{ "{% endblock %}" }}
 {{ "{% block body %}" }}
-{{ '{{ form_errors_tips(errors)|raw }}' }}
-<div class="informCon">
-    {{  "{{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'form-x', 'id': 'form'}}) }}" }}
-    <table class="table informTable">
-        {% set _nowTd = 0 -%}
-        {% for field, metadata in fields -%}
-            {% if field not in ['createAt', 'updateAt'] %}
-            {% if privateFieldArr is not empty and field not in privateFieldArr -%}
-                {% set _nowTd = _nowTd + 1 -%}
-                {% if _nowTd == 1 -%}
-                    <tr>
-                {% endif -%}
 
-                {% if metadata.type in ['text'] -%}
-
-                    {%- if _nowTd == 2 -%}
-                        </tr>
-                        <tr>
-                    {%- endif -%}
-                    <td class="td_head">{{ '{{ form_label(form.' ~ field ~ ') }}' }}</td>
-                    <td colspan="3">{{ '{{ form_widget(form.' ~ field ~ ') }}' }}</td>
-                    {%- set _nowTd = 2 -%}
-
-                {% else -%}
-                    <td class="td_head">{{ '{{ form_label(form.' ~ field ~ ') }}' }}</td>
-                    <td>{{ '{{ form_widget(form.' ~ field ~ ') }}' }}</td>
-
-                {%- endif %}
-
-                {% if _nowTd >= 2 -%}
-                    {% set _nowTd = 0 -%}
-                    </tr>
-                {%- endif %}
-            {%- endif -%}
-            {% endif %}
-        {%- endfor -%}
-
-        {%- if _nowTd == 1 %}
-            </tr>
-        {% endif %}
-    </table>
-    <div class="form_btn_group">
-        <button id="form_btn_submit" class="button hidden" type="submit">提交</button>
-        <button id="form_btn_reset" class="button hidden" type="reset">重置</button>
+<div class="content">
+    <div class="title_box">
+        <div class="title margin-none">新增</div>
     </div>
-    {{  "{{ form_end(form) }}" }}
+
+    {{ '{{ form_errors_tips(errors)|raw }}' }}
+    {{  "{{ form_start(form) }}" }}
+    <div class="table_box">
+        <table class="table table-bordered table-bg-none table_edit">
+            <colgroup width="10%"></colgroup>
+            <colgroup width="13.3%"></colgroup>
+            <colgroup width="10%"></colgroup>
+            <colgroup width="16.6%"></colgroup>
+
+            {% set _nowTd = 0 -%}
+            {% for field, metadata in fields -%}
+                {% if field not in ['createAt', 'updateAt'] %}
+                {% if privateFieldArr is not empty and field not in privateFieldArr -%}
+                    {% set _nowTd = _nowTd + 1 -%}
+                    {% if _nowTd == 1 -%}
+                        <tr>
+                    {% endif -%}
+
+                    {% if metadata.type in ['text'] -%}
+
+                        {%- if _nowTd == 2 -%}
+                            </tr>
+                            <tr>
+                        {%- endif -%}
+                        <td class="bg-hui">{{ '{{ form_label(form.' ~ field ~ ') }}' }}</td>
+                        <td colspan="3" class="text-left">{{ '{{ form_widget(form.' ~ field ~ ', {\'attr\':{\'class\':\'border-bottom\'}}) }}' }}</td>
+                        {%- set _nowTd = 2 -%}
+
+                    {% else -%}
+                        <td class="bg-hui">{{ '{{ form_label(form.' ~ field ~ ') }}' }}</td>
+                        <td class="text-left">{{ '{{ form_widget(form.' ~ field ~ ', {\'attr\':{\'class\':\'border-bottom\'}}) }}' }}</td>
+
+                    {%- endif %}
+
+                    {% if _nowTd >= 2 -%}
+                        {% set _nowTd = 0 -%}
+                        </tr>
+                    {%- endif %}
+                {%- endif -%}
+                {% endif %}
+            {%- endfor -%}
+
+            {%- if _nowTd == 1 %}
+                </tr>
+            {% endif %}
+        </table>
+        {{ "{{ form_widget(form.submit,{'attr':{'class':'add_text add_text_top','style':'padding:0px'}}) }}" }}
+        <input type="reset" class="add_text margin-big-top bg-none text_blue" style="margin-top: 30px" value="重置" />
+    </div>
+    {{ "{{ form_end(form) }}" }}
 </div>
 {{ "{% endblock %}" }}
 {% endblock body %}

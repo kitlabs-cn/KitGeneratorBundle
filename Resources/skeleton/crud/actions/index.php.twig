@@ -15,16 +15,14 @@
 {% endblock method_definition %}
     {
 {% block method_body %}
-        // TODO deal search params ...
-        $searchParams = $this->getSearchParams();
-
 		/**
          *
          * @var \{{ bundle }}\Repository\{{ entity }}Repository $repo
          */
         $repo = $this->getDoctrine()->getRepository('{{ bundle }}:{{ entity }}');
-
-        $pagination = $this->getPagination($repo->getPageQuery());
+        $pagesize = 15;
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate($repo->getPageQuery(), $request->query->getInt('page', 1), $pagesize);
 {% endblock method_body %}
 
 {% block method_return %}

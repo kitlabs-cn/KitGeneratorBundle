@@ -23,7 +23,7 @@
          */
         ${{ entity_singularized }} = $this->getDoctrine()->getRepository('{{ bundle }}:{{ entity }}')->find($id);
         if(empty(${{ entity_singularized }})){
-        		return $this->frameMsgResponse(1, '警告', '该记录不存在或已被删除');
+        		return $this->msgResponse(1, '警告', '改记录不存在或已被删除','{{ route_name_prefix }}_index');
         }
 {% endblock method_body %}
 

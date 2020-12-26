@@ -30,7 +30,7 @@
         		$em = $this->getDoctrine()->getManager();
                 $em->persist(${{ entity_singularized }});
                 $em->flush();
-                return $this->frameMsgResponse(0, '提示', '新增成功');
+        	   	return $this->msgResponse(0, '提示', '新增成功','{{ route_name_prefix }}_index');
             }else{
                 $errors = $this->serializeFormErrors($form);
             }

@@ -1,144 +1,114 @@
 {% block extends %}
-{{ "{% extends 'layout.html.twig' %}" }}
+{{ "{% extends 'base.html.twig' %}" }}
 {% endblock extends %}
 
 {{ "{% block css %}" }}
-<link rel="stylesheet" href="{{ "{{ asset('css/research.css?v=1024'|theme) }}" }}">
+<link rel="stylesheet" type="text/css" href="{{ "{{ asset('css/d_m_send_out_document.css?v=1024'|theme) }}" }}"/>
+<link rel="stylesheet" type="text/css" href="{{ "{{ asset('css/assets_collar_list.css'|theme) }}" }}"/>
+<link rel="stylesheet" type="text/css" href="{{ "{{ asset('css/manuscript_base.css'|theme) }}" }}">
 {{ "{% endblock %}" }}
 
 {% block body %}
-{{ "{% block content %}" }}
-		{{ '{{' }}
-			config_search([
-				{% for field, metadata in fields -%}
-					{%- if loop.index < 4 -%}
-						{% if metadata.options.comment is defined -%}
-							config_search_getFieldHtml('{{ metadata.options.comment }}', '{{ field }}'),
-						{% else -%}
-							config_search_getFieldHtml('{{ field|capitalize }}', '{{ field }}'),
-						{% endif %}
-					{%- endif %}
-				{%- endfor %}
+{{ "{% block body %}" }}
+<div class="content">
+    <!--内容-->
+    <div class="title_box">
+        <div class="title margin-none">列表</div>
+        <span class="title_all border-none text_blue btn_back">
+            <a href="{{ '{{ path(\''~route_name_prefix ~'_new\') }}' }}">
+                <b>+</b>
+                <span>新增</span>
+            </a>
+        </span>
+    </div>
 
-			], [
-				{{ 'session_menu_access(\'' ~ route_name_prefix ~ '_new\')' }} ? '<button type="button" class="button notice_add" onclick="PopupPage.open(\'新增{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}\',\'' ~ path('{{ route_name_prefix ~'_new' }}') ~ '\', [\'保存\',\'关闭\'])"><span class="icon-plus"></span>新增</button>' : '',
-			])
-		{{ '}}' }}
-		<div class="list_box">
-			<table class="table listTable">
-				<tr>
-					{% for field, metadata in fields -%}
-						<th>
-							{%- if metadata.options.comment is defined -%}
-								{{ metadata.options.comment }}
-							{%- else -%}
-								{{ field|capitalize }}
-							{%- endif -%}
-						</th>
-					{% endfor -%}
-					<th class="last-child">操作</th>
-				</tr>
-				{{'{% if pagination is defined and pagination is not empty %}' }}
-				{{ '{% for item in pagination %}' }}
-				{% set isSetTitle = false -%}
-				<tr id="item_{{ '{{ item.id }}' }}">
-					{% for field, metadata in fields -%}
-						<td>
-							{%- if isSetTitle == false and metadata.type == 'string' -%}
-								{%- set isSetTitle = true -%}
-								<a class="notice_tit" href="javascript:;" onclick="PopupPage.open('{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}详情','{{ '{{ path(\'' ~ route_name_prefix ~'_show\', { \'id\': item.id }) }}' }}',['编辑', '删除', '关闭'])">{{ '{{ item.' ~ field ~ '|truncate(20,false,\'...\') }}' }}</a>
-							{%- else -%}
-								{%- if metadata.type in ['datetime'] -%}
-									{{ '{{ item.' ~ field ~ '|date(\'Y-m-d H:i:s\') }}' }}
-								{%- elseif metadata.type in ['string', 'text'] -%}
-									{{ '{{ item.' ~ field ~ '|truncate(20,false,\'...\') }}' }}
-								{%- else -%}
-									{{- '{{ item.' ~ field ~ ' }}' -}}
-								{%- endif -%}
-							{%- endif -%}
-						</td>
-					{% endfor -%}
-					<td class="operation_btn">
-						<div class="relative">
-							<a class="text-yellow hover_span">...</a>
-							<ul class="operate_complete">
-								<li><a class="text-blue" href="javascript:void(0)" onclick="PopupPage.open('{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}详情','{{ '{{ path(\'' ~ route_name_prefix ~'_show\', { \'id\': item.id }) }}' }}',['关闭'])">查看</a></li>
+    <div class="column">
+        <label for="">
+            <a href="javascript:void(0);" onclick="btn_print('parint')">
+                <img src="{{ '{{' }} asset('images/printing.png'|theme) {{ '}}' }}"/>
+                <span class="whole">打印</span>
+            </a>
+        </label>
+        <form action="" class="fr">
+            <div class="search_box btn_box ">
+                <input type="submit" class="btn fl active" value="搜索">
+                <input type="reset" class="btn fr" value="重置">
+            </div>
+                {% for field, metadata in fields -%}
+                    {%- if loop.index > 1 and loop.index <= 3 -%}
+                    <div class="search_box">
+                        {% if metadata.options.comment is defined -%}
+                            <input name="{{ field }}" type="text" class="search" placeholder="请输入{{ metadata.options.comment }}" value="{{ '{{' }} app.request.query.get('{{ field }}') {{ '}}' }}">
+                        {% else -%}
+                            <input name="{{ field }}" type="text" class="search" placeholder="请输入{{ field|capitalize }}" value="{{ '{{' }} app.request.query.get('{{ field }}') {{ '}}' }}">
+                        {% endif %}
+                    </div>
+                    {%- endif %}
+                {%- endfor %}
+        </form>
+        <br>
+    </div>
 
-								{{ '{% if session_menu_access(\'' ~ route_name_prefix ~ '_edit\') %}' }}
-								<li><a class="text-yellow" href="javascript:void(0)" onclick="PopupPage.open('{% if table.options.comment is defined %}{{ table.options.comment }}{% else %}{{ entity_pluralized|capitalize }}{% endif %}编辑','{{ '{{ path(\'' ~ route_name_prefix ~'_edit\', { \'id\': item.id }) }}' }}',['保存', '关闭'])">编辑</a></li>
-								{{ '{% endif %}' }}
+    <table class="table interlacing parint">
+        <tr class="bg_title">
+            {% for field, metadata in fields -%}
+                <th>
+                    {%- if metadata.options.comment is defined -%}
+                        {{ metadata.options.comment }}
+                    {%- else -%}
+                        {{ field|capitalize }}
+                    {%- endif -%}
+                </th>
+            {% endfor -%}
+            <th width="260" class="text-center print-hidden">操作</th>
+        </tr>
+        {{'{% if pagination is defined and pagination is not empty %}' }}
+            {{ '{% for item in pagination %}' }}
+            {% set isSetTitle = false -%}
+            <tr id="item_{{ '{{ item.id }}' }}">
+                {% for field, metadata in fields -%}
+                    <td>
+                        {%- if metadata.type in ['datetime'] -%}
+                            {{ '{{ item.' ~ field ~ '|date(\'Y-m-d H:i:s\') }}' }}
+                        {%- elseif metadata.type in ['string', 'text'] -%}
+                            {{ '{{ item.' ~ field ~ '|truncate(20,false,\'...\') }}' }}
+                        {%- else -%}
+                            {{- '{{ item.' ~ field ~ ' }}' -}}
+                        {%- endif -%}
+                    </td>
+                {% endfor -%}
 
-								{{ '{% if session_menu_access(\'' ~ route_name_prefix ~ '_delete\') %}' }}
-								<li><a class="text-red" href="javascript:void(0)" onclick="delItem({{ '{{' }} item.id {{ '}}' }})">删除</a></li>
-								{{ '{% endif %}' }}
-							</ul>
-						</div>
-					</td>
-				</tr>
-				{{ '{% endfor %}' }}
-				{{ '{% else %}' }}
-					{% set num = (fields|length) -%}
-					{{ '{{ macro_no_content('~ (num+1) ~') }}' }}
-				{{ '{% endif %}' }}
-			</table>
-			{{ '{{ knp_pagination_render(pagination,\'pagination.html.twig\') }}' }}
-		</div>
+                <td class="print-hidden">
+                    <a href="{{ '{{ path(\'' ~ route_name_prefix ~'_show\', { \'id\': item.id }) }}' }}" class="btn_cl">查看</a>
+                    <a href="{{ '{{ path(\'' ~ route_name_prefix ~'_edit\', { \'id\': item.id }) }}' }}" class="btn_cl">编辑</a>
+                    <a href="javascript:;" onclick="del({{ '{{' }} item.id {{ '}}' }})" class="btn_cl">删除</a>
+                </td>
+            </tr>
+            {{ '{% endfor %}' }}
+        {{ '{% else %}' }}
+            {% set num = (fields|length) -%}
+            {{ '{{ macro_no_content('~ (num+1) ~') }}' }}
+        {{ '{% endif %}' }}
+    </table>
+    <!--分页-->
+    {{ '{{' }} knp_pagination_render(pagination,'pagination.html.twig') {{ '}}' }}
+
+</div>
 {{ "{% endblock %}" }}
 {{ '{% block js %}' }}
-<script src="{{ "{{ asset('js/popup_page.js?v=1027'|theme) }}" }}"></script>
+
+<script src="{{ '{{' }} asset('js/all_select.js'|theme) {{ '}}' }}" type="text/javascript" charset="utf-8"></script>
+<script src="{{ '{{' }} asset('js/jquery.jqprint-0.3.js'|theme) {{ '}}' }}"></script>
+<script src="{{ '{{' }} asset('js/print_extend.js'|theme) {{ '}}' }}"></script>
 <script>
-
-   // 弹出层按钮操作注册 - 保存
-   PopupPage.registerBtnCallBack('保存', function(iframeWin){
-	   $(iframeWin.document.body).find('#form_btn_submit').click();
-   });
-
-   {{ '{% if session_menu_access(\'' ~ route_name_prefix ~ '_edit\') %}' }}
-   // 弹出层按钮操作注册 - 编辑
-   PopupPage.registerBtnCallBack('编辑', function(iframeWin){
-	   PopupPage.closePopup();
-
-	   var url = "{{ '{{ path(\'' ~ route_name_prefix ~ '_edit\', { id: \'__popu_page_entity_id__\'}) }}' }}";
-	   url = url.replace(/__popu_page_entity_id__/, PopupPage.getParamByUrl('id'));
-	   PopupPage.open('编辑',url, ['保存', '删除', '关闭'], {'anim':false});
-   });
-   {{ '{% endif %}' }}
-
-   {{ '{% if session_menu_access(\'' ~ route_name_prefix ~ '_delete\') %}' }}
-   // 弹出层按钮操作注册 - 删除
-   PopupPage.registerBtnCallBack('删除', function(iframeWin){
-	   delItem(PopupPage.getParamByUrl('id'));
-   });
-   {{ '{% endif %}' }}
-
-   /**
-	* 删除单个实体
-	*/
-	function delItem($id)
-	{
-		layer.confirm('确定要删除吗?', {}, function (_layer_index) {
-			layer.close(_layer_index); // 关闭提示层
-			var _loading_index = layer.load(1, {shade: [0.1, '#fff']}); // 加载动画
-
-			$.post(
-					"{{ '{{ path(\'' ~ route_name_prefix ~ '_delete\') }}' }}", {id: $id },
-					function (result) {
-						layer.close(_loading_index); // 关闭加载动画
-						if (result.code == 1) {
-							layer.msg(result.msg, {icon: 1,time: 2000}, function () {
-								PopupPage.closePopup();
-								window.location.reload()
-							});
-						} else {
-							layer.msg(result.msg, {icon: 2,time: 2000});
-						}
-					}
-			).error(function () {
-				layer.close(_loading_index); // 关闭加载动画
-				layer.msg('服务异常', {icon: 2, time: 2000});
-			});
-		})
-	}
+    function del(data) {
+        $.post("{{ '{{ path(\'' ~ route_name_prefix ~ '_delete\') }}' }}", {id: data}, function (result) {
+            $(".item" + data).remove();
+            layer.msg('已删除', {icon: 1,time: 2000}, function () {
+                window.location.reload()
+            });
+        });
+    }
 </script>
 {{ '{% endblock %}' }}
 {% endblock body %}

@@ -1,17 +1,31 @@
 {% block extends %}
-    {{ "{% extends 'layout.html.twig' %}" }}
+    {{ "{% extends 'base.html.twig' %}" }}
 {% endblock extends %}
 
 {% block body %}
 {{ "{% block css %}" }}
-<link rel="stylesheet" href="{{ '{{' }} asset('css/inform_table.css?v=1024'|theme) {{ '}}' }}">
-<link rel="stylesheet" href="{{ '{{' }} asset('css/popup_page.css?v=1024'|theme) {{ '}}' }}">
+    <link rel="stylesheet" type="text/css" href="{{ '{{' }} asset('css/d_m_send_out_document.css'|theme) {{ '}}' }}" />
+    <link rel="stylesheet" type="text/css" href="{{ '{{' }} asset('css/table_document.css'|theme) {{ '}}' }}" />
+    <link rel="stylesheet" type="text/css" href="{{ '{{' }} asset('css/assets_collar_list.css'|theme) {{ '}}' }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ '{{' }} asset('css/conferent_new.css'|theme) {{ '}}' }}" />
 {{ "{% endblock %}" }}
 {{ "{% block body %}" }}
-    <div class="informCon">
-        <table class="table informTable">
+
+<div class="content">
+    <div class="title_box">
+        <div class="title margin-none">详情</div>
+    </div>
+
+    <div class="table_box">
+        <table class="table table-bordered table-bg-none table_edit">
+            <colgroup width="10%"></colgroup>
+            <colgroup width="13.3%"></colgroup>
+            <colgroup width="10%"></colgroup>
+            <colgroup width="16.6%"></colgroup>
+
+
             {% set _nowTd = 0 -%}
-            {% for field, metadata in fields -%}
+            {% for field, metadata in fields if field|lower != 'id' -%}
                 {%- set _nowTd = _nowTd + 1 -%}
                 {%- if _nowTd == 1 -%}
                 <tr>
@@ -22,35 +36,15 @@
                     {%- set _nowTd = 2 -%}
                 {% endif %}
 
-                <td class="td_head">{% if metadata.options.comment is defined %}{{ metadata.options.comment }}{% else %}{{ field|capitalize }}{% endif %}</td>
+                <td class="bg-hui">{% if metadata.options.comment is defined %}{{ metadata.options.comment }}{% else %}{{ field|capitalize }}{% endif %}</td>
 
                 {% if metadata.type in ['text'] -%}
 
-                    <td colspan="3">{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' }}' }}</td>
-
-                {% elseif metadata.type in ['datetime'] -%}
-
-                <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d H:i:s\') }}{% endif %}' }}</td>
-
-                {% elseif metadata.type in ['date'] -%}
-
-                <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d\') }}{% endif %}' }}</td>
-
-                {% elseif metadata.type in ['time'] -%}
-
-                <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'H:i:s\') }}{% endif %}' }}</td>
-
-                {% elseif metadata.type in ['array'] -%}
-
-                <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|join(\', \') }}{% endif %}' }}</td>
-
-                {% elseif metadata.type in ['boolean'] -%}
-
-                <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}Yes{% else %}No{% endif %}' }}</td>
+                    <td class="text-left" colspan="3">{{ '{{ config_form_showValue(' ~ entity_singularized ~ ', \'' ~ field|replace({'_': ''}) ~ '\') }}' }}</td>
 
                 {% else -%}
 
-                <td>{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' }}' }}</td>
+                    <td class="text-left">{{ '{{ config_form_showValue(' ~ entity_singularized ~ ', \'' ~ field|replace({'_': ''}) ~ '\') }}' }}</td>
 
                 {% endif -%}
 
@@ -68,5 +62,7 @@
             {% endif %}
         </table>
     </div>
+</div>
+
 {{ "{% endblock %}" }}
 {% endblock body %}
