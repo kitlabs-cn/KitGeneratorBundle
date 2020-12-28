@@ -13,13 +13,13 @@
 
     <div class="content">
         <div class="title_box">
-            <div class="title margin-none">新增</div>
+            <div class="title margin-none">编辑{{ table.options.comment }}</div>
         </div>
 
         {{ '{{ form_errors_tips(errors)|raw }}' }}
         {{  "{{ form_start(form) }}" }}
         <div class="table_box">
-            <table class="table table-bordered table-bg-none table_edit">
+            <table class="table table-bordered table-bg-none table_edit table_edit_new">
                 <colgroup width="10%"></colgroup>
                 <colgroup width="13.3%"></colgroup>
                 <colgroup width="10%"></colgroup>
@@ -41,12 +41,12 @@
                                     <tr>
                                 {%- endif -%}
                                 <td class="bg-hui">{{ '{{ form_label(form.' ~ field ~ ') }}' }}</td>
-                                <td colspan="3" class="text-left">{{ '{{ form_widget(form.' ~ field ~ ', {\'attr\':{\'class\':\'border-bottom\'}}) }}' }}</td>
+                                <td colspan="3" class="text-left">{{ '{{ form_widget(form.' ~ field ~ ') }}' }}</td>
                                 {%- set _nowTd = 2 -%}
 
                             {% else -%}
                                 <td class="bg-hui">{{ '{{ form_label(form.' ~ field ~ ') }}' }}</td>
-                                <td class="text-left">{{ '{{ form_widget(form.' ~ field ~ ', {\'attr\':{\'class\':\'border-bottom\'}}) }}' }}</td>
+                                <td class="text-left">{{ '{{ form_widget(form.' ~ field ~ ') }}' }}</td>
 
                             {%- endif %}
 
