@@ -17,8 +17,7 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('kit_generator');
+        $treeBuilder = new TreeBuilder('kit_generator');
 
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for
